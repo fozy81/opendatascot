@@ -1,0 +1,40 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# opendatascot
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`opendatascot` is a R package to download and locally cache data from https://opendata.scot/ .
+
+## Installation
+
+You can install the development version of opendatascot from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fozy81/opendatascot")
+```
+
+## Example
+
+Search and download dataets from opendata.scot
+
+```{r example}
+library(opendatascot)
+## basic example code
+data <- get_data(search = 'Number of bikes')
+```
