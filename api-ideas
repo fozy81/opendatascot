@@ -1,0 +1,34 @@
+# API ideas:
+
+data <- search_ods("communal bins") |>
+        download_ods()
+ggplot(data)
+data <- search_ods("communal bins") |>
+  download_ods()
+
+ # data <- tibble::tibble(title = names(data), data = list(data$`Communal Bins`))
+  data$plots <- data %>%
+  dplyr::group_by(title) %>%
+  dplyr::mutate(plot = purrr::map(data, ~ggplot(., aes(x = X, y = Y)) + geom_point()))
+
+data %>%
+  select_if(is.numeric) %>%
+  distinct() %>%
+  gather(cols, range) %>%
+  ggplot(aes(x = range)) +
+    geom_histogram() +
+    facet_wrap(. ~ cols, ncol = 2, scales = "free")
+
+
+iris.with.plots$plot[[1]] + iris.with.plots$plot[[2]]
+
+
+data |> split(data$title) |> map()
+purrr::map(data, )
+ggplot(data, aes(data$`Communal Bins`))
+
+search_ods() %>%
+download_ods(ask = FALSE)
+
+
+

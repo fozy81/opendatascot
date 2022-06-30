@@ -1,8 +1,8 @@
-#' Get Data
+#' Download Data
 #'
-#' Search and return matching datasets from https://opendata.scot/ API.
+#' Return matching data from https://opendata.scot/ API.
 #'
-#' @param search Search term
+#' @param data Dataframe from `search_ods()`
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
 #'   update or renew corrupted data/cache. This will download data again and
 #'   update cache.
@@ -14,17 +14,19 @@
 #' @export
 #'
 #' @examples
-get_data <- function(search = "",
-                     refresh = FALSE,
-                     ask = TRUE) {
-  datasets <- datasets(search = search)
-  if (nrow(datasets) < 1) {
+download_ods <- function(data = NULL,
+                         refresh = FALSE,
+                         ask = TRUE) {
+  if (nrow(data) < 1) {
     message("No datasets matching that title found")
     return()
   }
-  output <- lapply(split(datasets, datasets$title), function(dataset) {
+  output <- lapply(split(data, data$url), function(dataset) {
+    browser()
     dir <- opendatascot_dir()
-    file_name <- paste0(dataset$title, ".rds")
+    file_name <- gsub("/", "", dataset$url)
+    file_name <- gsub("+", "-", file_name)
+    file_name <- paste0(file_name, ".rds")
     file_path <- file.path(dir, file_name)
     if (!file.exists(file_path) | refresh) {
       create_data_dir(dir, ask, dataset)
@@ -32,8 +34,8 @@ get_data <- function(search = "",
       dataset <- tidyr::unnest(dataset, cols = "resources")
       dataset <- dplyr::filter(dataset, format == "CSV")
       if (nrow(dataset) < 1) {
-        message("No datasets with CSV for download found
-                (CSV is only the support format currently)")
+        message("No datasets with CSV for download found,
+                CSV is only the supported format currently")
         return()
       }
       url <- dataset$url[1]
@@ -48,8 +50,8 @@ get_data <- function(search = "",
     } else {
       data <- readRDS(file_path)
       time <- attributes(data)$time_downloaded
-      message(paste0(
-        dataset$title, " was updated on ",
+      message(paste0("'",
+        dataset$title, "' dataset was last downloaded on ",
         format(time, "%Y-%m-%d")
       ))
     }
