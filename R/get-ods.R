@@ -1,8 +1,9 @@
-#' Download Data
+#' Get Data
 #'
 #' Return matching data from https://opendata.scot/ API.
 #'
-#' @param data Dataframe from `search_ods()`
+#' @param data Dataframe from `search_ods()` or if default (NULL), will download
+#'   all datasets.
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
 #'   update or renew corrupted data/cache. This will download data again and
 #'   update cache.
@@ -14,18 +15,16 @@
 #' @export
 #'
 #' @examples
-download_ods <- function(data = NULL,
-                         refresh = FALSE,
-                         ask = TRUE) {
+get_ods <- function(data = NULL,
+                    refresh = FALSE,
+                    ask = TRUE) {
   if (nrow(data) < 1) {
     message("No datasets matching that title found")
     return()
   }
-  output <- lapply(split(data, data$url), function(dataset) {
-    browser()
+  output <- lapply(split(data, data$unique_id), function(dataset) {
     dir <- opendatascot_dir()
-    file_name <- gsub("/", "", dataset$url)
-    file_name <- gsub("+", "-", file_name)
+    file_name <- dataset$unique_id
     file_name <- paste0(file_name, ".rds")
     file_path <- file.path(dir, file_name)
     if (!file.exists(file_path) | refresh) {
@@ -50,7 +49,8 @@ download_ods <- function(data = NULL,
     } else {
       data <- readRDS(file_path)
       time <- attributes(data)$time_downloaded
-      message(paste0("'",
+      message(paste0(
+        "'",
         dataset$title, "' dataset was last downloaded on ",
         format(time, "%Y-%m-%d")
       ))
@@ -67,8 +67,10 @@ create_data_dir <- function(dir, ask, dataset) {
       dir, "Is that okay? Key '1' Go ahead",
       sep = "\n"
     ))
-    ans <- as.numeric(ans)
-    if (ans != 1) stop("No problem, stopping process", call. = FALSE)
+    if (ans != 1) {
+      message(paste("No problem, skipping download: ", dataset$title))
+      return(NULL)
+    }
   }
 
   if (!dir.exists(dir)) {

@@ -4,6 +4,8 @@
 # opendatascot
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `opendatascot` is a R package to download and locally cache data from
@@ -26,9 +28,10 @@ Search and download dataets from opendata.scot
 ``` r
 library(opendatascot)
 ## basic example code
-data <- get_data(search = 'Number of bikes')
-#> Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey was updated on 2022-06-25
-#> Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey was updated on 2022-06-25
-#> Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey was updated on 2022-06-25
-#> Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey was updated on 2022-06-25
+search <- search_ods('Number of bikes')
+data <- get_ods(search)
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-03
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-03
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-03
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-03
 ```

@@ -13,6 +13,12 @@ search_ods <- function(search = "") {
     flatten = TRUE
   )
   datasets <- datasets[grep(tolower(search), tolower(datasets$title)), ]
+
+  datasets <- dplyr::mutate(datasets, unique_id = paste(title, organization))
+  datasets$unique_id <- gsub("[^A-Za-z0-9._-]", "_",
+                             datasets$unique_id,
+                             perl = TRUE)
+  datasets <- dplyr::select(datasets, unique_id, tidyr::everything())
   datasets <- tibble::tibble(datasets)
   return(datasets)
 }

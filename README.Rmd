@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # opendatascot
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `opendatascot` is a R package to download and locally cache data from https://opendata.scot/ .
@@ -36,5 +37,6 @@ Search and download dataets from opendata.scot
 ```{r example}
 library(opendatascot)
 ## basic example code
-data <- get_data(search = 'Number of bikes')
+search <- search_ods('Number of bikes')
+data <- get_ods(search)
 ```
