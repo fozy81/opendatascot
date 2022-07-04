@@ -18,6 +18,13 @@ update cache.}
 This is useful to automate data downloads and cache updated or speed up the
 process if downloading many datasets at once.}
 }
+\value{
+list of named data frames.
+}
 \description{
 Return matching data from https://opendata.scot/ API.
+}
+\examples{
+search <- search_ods('Number of bikes')
+data <- get_ods(search)
 }

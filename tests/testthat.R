@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(opendatascot)
+library(opendatascotland)
 
-test_check("opendatascot")
+test_check("opendatascotland")

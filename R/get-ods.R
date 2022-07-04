@@ -11,10 +11,13 @@
 #'   This is useful to automate data downloads and cache updated or speed up the
 #'   process if downloading many datasets at once.
 #'
-#' @return
+#' @importFrom rlang .data
+#' @return list of named data frames.
 #' @export
 #'
 #' @examples
+#' search <- search_ods('Number of bikes')
+#' data <- get_ods(search)
 get_ods <- function(data = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
@@ -29,7 +32,7 @@ get_ods <- function(data = NULL,
     file_path <- file.path(dir, file_name)
     if (!file.exists(file_path) | refresh) {
       create_data_dir(dir, ask, dataset)
-      dataset <- dplyr::select(dataset, title, resources)
+      dataset <- dplyr::select(dataset, .data$title, .data$resources)
       dataset <- tidyr::unnest(dataset, cols = "resources")
       dataset <- dplyr::filter(dataset, format == "CSV")
       if (nrow(dataset) < 1) {

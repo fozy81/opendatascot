@@ -1,18 +1,24 @@
-Package: opendatascot
-Title: R library wrapper for opendata.scot API
+Package: opendatascotland
+Title: Download data from OpenData.Scot
 Version: 0.0.0.9000
 Authors@R: 
     person("Tim", "Foster", , "fozy81@hotmail.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: R library wrapper for datasets compiled on opendata.scot website.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 Imports: 
+  dplyr,
+  gtools,
   jsonlite,
-  gtools
+  rappdirs,
+  readr,
+  rlang,
+  tibble,
+  tidyr
 Suggests: 
-    testthat (>= 3.0.0),
-    pkgdown,
-    hexSticker
+  hexSticker,
+  pkgdown,
+  testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -1,3 +1,5 @@
+^doc$
+^docs$
 ^opendatascot\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
