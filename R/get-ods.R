@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' search <- search_ods('Number of bikes')
-#' data <- get_ods(search)
+#' data <- get_ods(search, refresh = TRUE, ask = FALSE)
 get_ods <- function(data = NULL,
                     refresh = FALSE,
                     ask = TRUE) {

@@ -26,5 +26,5 @@ Return matching data from https://opendata.scot/ API.
 }
 \examples{
 search <- search_ods('Number of bikes')
-data <- get_ods(search)
+data <- get_ods(search, refresh = TRUE, ask = FALSE)
 }
