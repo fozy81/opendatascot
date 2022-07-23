@@ -12,7 +12,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-`opendatascotland` is a R package to download and locally cache data
+`opendatascotland` is an R package to download and locally cache data
 from [opendata.scot](https://opendata.scot/).
 
 ## Installation
