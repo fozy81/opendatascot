@@ -3,6 +3,8 @@
 
 # opendatascotland
 
+<img src='https://github.com/fozy81/opendatascot/blob/master/inst/sticker/scotmaps.png?raw=true' align="right" width="300" />
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml)
@@ -11,7 +13,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 <!-- badges: end -->
 
 `opendatascotland` is a R package to download and locally cache data
-from <https://opendata.scot/> .
+from [opendata.scot](https://opendata.scot/).
 
 ## Installation
 
@@ -25,15 +27,34 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Example
 
-Search and download datasets from opendata.scot
+Search or view all datasets available on
+[opendata.scot](https://opendata.scot/)
 
 ``` r
 library(opendatascotland)
-## basic example code
-search <- search_ods('Number of bikes')
-data <- get_ods(search)
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-06
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-06
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-06
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-06
+# View all available datasets and associated metadata
+all_datasets <- search_ods()
+
+# Search dataset titles containing matching terms (case insensitive)
+single_query <- search_ods("Number of bikes")
+
+# Search multiple terms
+multi_query <- search_ods(c("Bins", "Number of bikes"))
+```
+
+Download datasets
+
+``` r
+query <- search_ods("Number of bikes")
+data <- get_ods(query)
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+# or
+data <- get_ods(search = "Number of bikes")
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
 ```

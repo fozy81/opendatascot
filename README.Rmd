@@ -15,12 +15,14 @@ knitr::opts_chunk$set(
 
 # opendatascotland
 
+<img src='https://github.com/fozy81/opendatascot/blob/master/inst/sticker/scotmaps.png?raw=true' align="right" width="300" />
+
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-`opendatascotland` is a R package to download and locally cache data from https://opendata.scot/ .
+`opendatascotland` is a R package to download and locally cache data from [opendata.scot](https://opendata.scot/).
 
 ## Installation
 
@@ -33,11 +35,26 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Example
 
-Search and download datasets from opendata.scot
+Search or view all datasets available on [opendata.scot](https://opendata.scot/)
+
+```{r search}
+library(opendatascotland)
+# View all available datasets and associated metadata
+all_datasets <- search_ods()
+
+# Search dataset titles containing matching terms (case insensitive)
+single_query <- search_ods("Number of bikes")
+
+# Search multiple terms
+multi_query <- search_ods(c("Bins", "Number of bikes"))
+```
+
+Download datasets
 
 ```{r example}
-library(opendatascotland)
-## basic example code
-search <- search_ods('Number of bikes')
-data <- get_ods(search)
+query <- search_ods("Number of bikes")
+data <- get_ods(query)
+# or
+data <- get_ods(search = "Number of bikes")
 ```
+

@@ -2,4 +2,6 @@
 
 export(get_ods)
 export(search_ods)
+importFrom(purrr,map_dfr)
 importFrom(rlang,.data)
+importFrom(tibble,as_tibble)

@@ -4,6 +4,8 @@
 #'
 #' @param data Dataframe from `search_ods()` or if default (NULL), will download
 #'   all datasets.
+#' @param search Search term(s) if `data` not provided, will use `search_ods()`
+#'   to return a dataframe of matching datasets.
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
 #'   update or renew corrupted data/cache. This will download data again and
 #'   update cache.
@@ -12,19 +14,34 @@
 #'   process if downloading many datasets at once.
 #'
 #' @importFrom rlang .data
+#' @importFrom tibble as_tibble
 #' @return list of named data frames.
 #' @export
 #'
 #' @examples
-#' search <- search_ods('Number of bikes')
+#' search <- search_ods("Number of bikes")
 #' data <- get_ods(search, refresh = TRUE, ask = FALSE)
 get_ods <- function(data = NULL,
+                    search = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
-  if (nrow(data) < 1) {
-    message("No datasets matching that title found")
-    return()
+  if (is.null(data) & is.null(search)){
+    message("data * search arguments are NULL, downloading all ods datasets!")
+    data <- search_ods()
   }
+
+  if (!is.null(data) & !is.null(search)){
+    stop("You provided values to both data and search paramters, only one can be used")
+  }
+
+  if (!is.null(search)){
+    data <- search_ods(search)
+  }
+
+  stopifnot("data must be a dataframe" = any(class(data) %in% "data.frame"))
+  stopifnot("data must have more than one row" = nrow(data) != 0)
+  stopifnot("data must have `unique_id` column" = !is.null(data$unique_id))
+
   output <- lapply(split(data, data$unique_id), function(dataset) {
     dir <- opendatascot_dir()
     file_name <- dataset$unique_id
@@ -41,7 +58,8 @@ get_ods <- function(data = NULL,
         return()
       }
       url <- dataset$url[1]
-      data <- readr::read_csv(url)
+      data <- readr::read_csv(url, show_col_types = FALSE)
+      data <- as_tibble(data)
       wd <- getwd()
       td <- tempdir()
       setwd(td)
@@ -65,8 +83,8 @@ get_ods <- function(data = NULL,
 
 create_data_dir <- function(dir, ask, dataset) {
   if (ask) {
-    ans <- gtools::ask(paste("opendatascot would like to store'",
-      dataset$title, "'dataset in the directory: ",
+    ans <- gtools::ask(paste("opendatascot would like to store: ",
+      dataset$title, " dataset in the directory: ",
       dir, "Is that okay? Key '1' Go ahead",
       sep = "\n"
     ))

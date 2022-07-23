@@ -4,11 +4,14 @@
 \alias{get_ods}
 \title{Get Data}
 \usage{
-get_ods(data = NULL, refresh = FALSE, ask = TRUE)
+get_ods(data = NULL, search = NULL, refresh = FALSE, ask = TRUE)
 }
 \arguments{
 \item{data}{Dataframe from \code{search_ods()} or if default (NULL), will download
 all datasets.}
+
+\item{search}{Search term(s) if \code{data} not provided, will use \code{search_ods()}
+to return a dataframe of matching datasets.}
 
 \item{refresh}{Refresh cached data. If data has changed remotely, use this to
 update or renew corrupted data/cache. This will download data again and
@@ -25,6 +28,6 @@ list of named data frames.
 Return matching data from https://opendata.scot/ API.
 }
 \examples{
-search <- search_ods('Number of bikes')
+search <- search_ods("Number of bikes")
 data <- get_ods(search, refresh = TRUE, ask = FALSE)
 }

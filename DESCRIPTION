@@ -12,6 +12,7 @@ Imports:
   dplyr,
   gtools,
   jsonlite,
+  purrr,
   rappdirs,
   readr,
   rlang,

@@ -17,6 +17,6 @@ dataframe of available datasets (matching search term if provided).
 Datasets
 }
 \examples{
+data <- search_ods() # return ALL datasets
 data <- search_ods(search = "bicycle") # search datasets
-data <- search_ods() # return all datasets
 }
