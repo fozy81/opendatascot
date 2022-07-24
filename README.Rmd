@@ -35,7 +35,7 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Example
 
-Search or view all datasets available on [opendata.scot](https://opendata.scot/)
+#### Search or view all datasets available on [opendata.scot](https://opendata.scot/)
 
 ```{r search}
 library(opendatascotland)
@@ -49,12 +49,49 @@ single_query <- search_ods("Number of bikes")
 multi_query <- search_ods(c("Bins", "Number of bikes"))
 ```
 
-Download datasets
+#### Download datasets
 
-```{r example}
+
+```{r}
 query <- search_ods("Number of bikes")
 data <- get_ods(query)
-# or
+```
+Or use the search parameter in get_ods to search
+```{r}
 data <- get_ods(search = "Number of bikes")
+```
+By default you be ask if you want to save the data locally on the first
+download. Optionally, you can refresh the data or avoid being asked to save
+data.
+```r
+data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+```
+#### Plot datasets
+
+```{r, echo=FALSE, message=FALSE}
+data <- get_ods(search = "Air Quality - Diffusion Tubes")
+```
+
+```r
+data <- get_ods(search = "Air Quality - Diffusion Tubes")
+```
+The get_ods() function returned a named list of data frames - lets select the
+one we want by name:
+
+```{r}
+air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+```
+Or alternatively select the first data frame in the list using index of 1.
+```{r}
+air_tubes <- data[[1]]
+```
+We can see the data frame is also classed as "sf" which has spatial / geometry
+attributes baked in. 
+```{r}
+class(air_tubes) 
+```
+This means plot function will automatically plot the coordinates.
+```{r}
+plot(air_tubes$geometry)
 ```
 

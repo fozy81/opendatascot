@@ -15,6 +15,12 @@
 #'
 #' @importFrom rlang .data
 #' @importFrom tibble as_tibble
+#' @importFrom readr read_csv read_file
+#' @importFrom dplyr filter select
+#' @importFrom tidyr unnest
+#' @importFrom gtools ask
+#' @importFrom rappdirs user_data_dir
+#' @importFrom sf st_read
 #' @return list of named data frames.
 #' @export
 #'
@@ -25,16 +31,16 @@ get_ods <- function(data = NULL,
                     search = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
-  if (is.null(data) & is.null(search)){
+  if (is.null(data) & is.null(search)) {
     message("data * search arguments are NULL, downloading all ods datasets!")
     data <- search_ods()
   }
 
-  if (!is.null(data) & !is.null(search)){
+  if (!is.null(data) & !is.null(search)) {
     stop("You provided values to both data and search paramters, only one can be used")
   }
 
-  if (!is.null(search)){
+  if (!is.null(search)) {
     data <- search_ods(search)
   }
 
@@ -49,17 +55,25 @@ get_ods <- function(data = NULL,
     file_path <- file.path(dir, file_name)
     if (!file.exists(file_path) | refresh) {
       create_data_dir(dir, ask, dataset)
-      dataset <- dplyr::select(dataset, .data$title, .data$resources)
-      dataset <- tidyr::unnest(dataset, cols = "resources")
-      dataset <- dplyr::filter(dataset, format == "CSV")
+      dataset <- select(dataset, .data$title, .data$resources)
+      dataset <- unnest(dataset, cols = "resources")
+      dataset <- filter(dataset, format %in% c("CSV", "GEOJSON"))
       if (nrow(dataset) < 1) {
-        message("No datasets with CSV for download found,
-                CSV is only the supported format currently")
+        message(paste0("This dataset is not available in a supported format
+(CSV or GEOJSON), try direct download from openscot.data"))
         return()
       }
-      url <- dataset$url[1]
-      data <- readr::read_csv(url, show_col_types = FALSE)
-      data <- as_tibble(data)
+      if (any(dataset$format %in% "GEOJSON")) {
+        dataset <- filter(dataset, format == "GEOJSON")
+        url <- dataset$url[1]
+        data <- read_file(url)
+        data <- st_read(dsn = data, quiet = TRUE)
+      } else {
+        dataset <- filter(dataset, format == "CSV")
+        url <- dataset$url[1]
+        data <- read_csv(url, show_col_types = FALSE)
+        data <- as_tibble(data)
+      }
       wd <- getwd()
       td <- tempdir()
       setwd(td)
@@ -83,7 +97,7 @@ get_ods <- function(data = NULL,
 
 create_data_dir <- function(dir, ask, dataset) {
   if (ask) {
-    ans <- gtools::ask(paste("opendatascot would like to store: ",
+    ans <- ask(paste("opendatascot would like to store: ",
       dataset$title, " dataset in the directory: ",
       dir, "Is that okay? Key '1' Go ahead",
       sep = "\n"
@@ -104,6 +118,6 @@ create_data_dir <- function(dir, ask, dataset) {
 
 opendatascot_dir <- function() {
   getOption("openscotdata.data_dir",
-    default = rappdirs::user_data_dir("opendatascot")
+    default = user_data_dir("opendatascot")
   )
 }

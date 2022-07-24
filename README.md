@@ -27,8 +27,7 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Example
 
-Search or view all datasets available on
-[opendata.scot](https://opendata.scot/)
+#### Search or view all datasets available on [opendata.scot](https://opendata.scot/)
 
 ``` r
 library(opendatascotland)
@@ -42,19 +41,67 @@ single_query <- search_ods("Number of bikes")
 multi_query <- search_ods(c("Bins", "Number of bikes"))
 ```
 
-Download datasets
+#### Download datasets
 
 ``` r
 query <- search_ods("Number of bikes")
 data <- get_ods(query)
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-# or
-data <- get_ods(search = "Number of bikes")
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-23
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
 ```
+
+Or use the search parameter in get_ods to search
+
+``` r
+data <- get_ods(search = "Number of bikes")
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+```
+
+By default you be ask if you want to save the data locally on the first
+download. Optionally, you can refresh the data or avoid being asked to
+save data.
+
+``` r
+data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+```
+
+#### Plot datasets
+
+``` r
+data <- get_ods(search = "Air Quality - Diffusion Tubes")
+```
+
+The get_ods() function returned a named list of data frames - lets
+select the one we want by name:
+
+``` r
+air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+```
+
+Or alternatively select the first data frame in the list using index of
+1.
+
+``` r
+air_tubes <- data[[1]]
+```
+
+We can see the data frame is also classed as “sf” which has spatial /
+geometry attributes baked in.
+
+``` r
+class(air_tubes) 
+#> [1] "sf"         "data.frame"
+```
+
+This means plot function will automatically plot the coordinates.
+
+``` r
+plot(air_tubes$geometry)
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />

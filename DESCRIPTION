@@ -16,6 +16,7 @@ Imports:
   rappdirs,
   readr,
   rlang,
+  sf,
   tibble,
   tidyr
 Suggests: 
