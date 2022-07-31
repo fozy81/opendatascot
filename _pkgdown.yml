@@ -1,10 +1,4 @@
-url: https://ecodata1.github.io/opendatascot
+url: https://fozy81.github.io/opendatascot/
 template:
   bootstrap: 5
-navbar:
- components:
-   articles:
-    text: Docs
-    menu:
-    - text: Basic Examples
-      href: articles/basic-usage.html
+
