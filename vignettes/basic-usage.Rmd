@@ -14,16 +14,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # Intro
 
 A good place to start is by browsing datasets on
 [opendata.scot](https://opendata.scot/). You can filter and search to find
 datasets of interests. The `openscotland` R package can then download and save
 the datasets you are interested in. This helps to quickly start analysis without
-needing to work out how to save, organise and import data in R. Also, this
-avoids having to share you R script analysis with other people without having to
-include the raw data files.
+needing to work out how to save, organise and import data in R.
 
 # Search
 
@@ -59,13 +56,22 @@ then pass that data frame to `get_ods()`
 
 ```{r}
 query <- search_ods("Grit bins")
+```
+```{r, echo=FALSE, message=FALSE}
+data <- get_ods(query, ask = FALSE)
+```
+
+```{r
 data <- get_ods(query)
 ```
 
 Or use the search argument in `get_ods(search="my search term")` to search and
 download any matching datasets in one step.
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
+data <- get_ods(search = "Grit bins", ask = FALSE)
+```
+```{r
 data <- get_ods(search = "Grit bins")
 ```
 
@@ -82,12 +88,12 @@ Once you have downloaded the dataset(s), you may wish to plot or map the data.
 Here's a short example of how plotting can be done.
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "Air Quality - Diffusion Tubes")
+data <- get_ods(search = "Air Quality - Diffusion Tubes", ask = FALSE)
 ```
-
 ```r
 data <- get_ods(search = "Air Quality - Diffusion Tubes")
 ```
+
 The `get_ods()` function returned a named list of data frames - lets select the
 one we want by name:
 
@@ -129,7 +135,7 @@ Let's download the Glasgow cycle counts data which is only available in JSON
 format.
 
 ```{r}
-cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
+cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE)
 cycle_count <- cycle_count[[1]]
 cycle_count
 ```
