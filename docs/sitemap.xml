@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/CODE_OF_CONDUCT.html</loc>
+    <loc>/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/LICENSE-text.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/LICENSE.html</loc>
+    <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/articles/basic-usage.html</loc>
+    <loc>/articles/basic-usage.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/articles/index.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/authors.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/index.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/reference/download_ods.html</loc>
+    <loc>/reference/download_ods.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/reference/get_ods.html</loc>
+    <loc>/reference/get_ods.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/reference/index.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/opendatascot/reference/search_ods.html</loc>
+    <loc>/reference/search_ods.html</loc>
   </url>
 </urlset>
