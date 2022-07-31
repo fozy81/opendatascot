@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-ods.R
 \name{get_ods}
 \alias{get_ods}
-\title{Get Data}
+\title{Get Data From Open Data Scotland}
 \usage{
 get_ods(data = NULL, search = NULL, refresh = FALSE, ask = TRUE)
 }
@@ -10,8 +10,7 @@ get_ods(data = NULL, search = NULL, refresh = FALSE, ask = TRUE)
 \item{data}{Dataframe from \code{search_ods()} or if default (NULL), will download
 all datasets.}
 
-\item{search}{Search term(s) if \code{data} not provided, will use \code{search_ods()}
-to return a dataframe of matching datasets.}
+\item{search}{Search term(s) if \code{data} parameter not provided.}
 
 \item{refresh}{Refresh cached data. If data has changed remotely, use this to
 update or renew corrupted data/cache. This will download data again and
@@ -22,10 +21,14 @@ This is useful to automate data downloads and cache updated or speed up the
 process if downloading many datasets at once.}
 }
 \value{
-list of named data frames.
+list of named data frames. GeoJSON data is converted to simple
+features \code{sf} class to aid spatial analysis.
 }
 \description{
-Return matching data from https://opendata.scot/ API.
+Return data from https://opendata.scot/ website. Currently, only datasets in
+CSV and GeoJSON formats supported. If data not available in this formats, a
+warning is provided. By default data is saved locally to avoid subsequent
+download time.
 }
 \examples{
 search <- search_ods("Number of bikes")

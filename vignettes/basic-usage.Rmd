@@ -1,0 +1,222 @@
+---
+title: "Basic Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Intro
+
+A good place to start is by browsing datasets on
+[opendata.scot](https://opendata.scot/). You can filter and search to find
+datasets of interests. The `openscotland` R package can then download and save
+the datasets you are interested in. This helps to quickly start analysis without
+needing to work out how to save, organise and import data in R. Also, this
+avoids having to share you R script analysis with other people without having to
+include the raw data files.
+
+# Search
+
+The `opendatascotland` package has a basic search function for finding available
+datasets and viewing their metadata. Use `ods_search()` function to view
+metadata for all datasets or filter by matching search terms in the dataset's
+title.
+
+```{r search}
+library(opendatascotland)
+# View all available datasets and associated metadata
+all_datasets <- search_ods()
+
+# Search dataset titles containing matching terms (case insensitive)
+single_query <- search_ods("Number of bikes")
+
+# Search multiple terms
+multi_query <- search_ods(c("Bins", "Number of bikes"))
+head(multi_query)
+```
+
+Note, search term is case-insensitive but word order must be correct (there is
+no 'fuzzy' matching).
+
+# Download
+
+Currently, only download datasets available in `.csv`, `json` or `.geojson` can
+be downloaded. These formats cover the majority of data available. You will be
+warned if a dataset can't be downloaded.
+  
+To download data, you can either download the metadata using `search_ods()`,
+then pass that data frame to `get_ods()`
+
+```{r}
+query <- search_ods("Grit bins")
+data <- get_ods(query)
+```
+
+Or use the search argument in `get_ods(search="my search term")` to search and
+download any matching datasets in one step.
+
+```{r}
+data <- get_ods(search = "Grit bins")
+```
+
+By default, you will be asked if you want to save the data locally on the first
+download. Optionally, you can refresh the data or avoid being asked to save
+data.
+
+```r
+data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+```
+# Plot
+
+Once you have downloaded the dataset(s), you may wish to plot or map the data.
+Here's a short example of how plotting can be done.
+
+```{r, echo=FALSE, message=FALSE}
+data <- get_ods(search = "Air Quality - Diffusion Tubes")
+```
+
+```r
+data <- get_ods(search = "Air Quality - Diffusion Tubes")
+```
+The `get_ods()` function returned a named list of data frames - lets select the
+one we want by name:
+
+```{r}
+air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+```
+
+Or alternatively select the first data frame in the list using index of 1.
+
+```{r}
+air_tubes <- data[[1]]
+```
+
+Geojson datasets are automating converted to [simple
+feature](https://r-spatial.github.io/sf/) 'sf' data. As we can see in the
+example the data frame is classed as "sf" which means spatial / geometry
+attributes are baked in. 
+
+```{r}
+class(air_tubes) 
+```
+
+You can see a `geometry` variable which contains the spatial co-ordinates. This
+allows the `plot()` function to automatically plot the coordinates.
+
+```{r}
+plot(air_tubes$geometry, col = as.factor(air_tubes$LOCATION))
+```
+
+## JSON
+
+Some data is only available in JSON or CSV formats which does not automatically
+have spatial geometry. For example, the Glasgow cycling counts does have
+`latitude` and `longitude` variables but is downloaded as JSON and therefore
+does not have spatial geometry added by default. This type of data is converted
+to a data frame.
+  
+Let's download the Glasgow cycle counts data which is only available in JSON
+format.
+
+```{r}
+cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
+cycle_count <- cycle_count[[1]]
+cycle_count
+```
+
+We can see the cycle count JSON has been converted into a 'flat' tabulated data
+frame. This data frame can now be plotted as a chart, in the following example,
+let's use the `ggplot2` plotting library to create a graph. We'll display counts
+over time for each location.
+
+```{r}
+library(ggplot2)
+# Convert character to date (to display date time correctly) 
+cycle_count$Date <- as.Date(cycle_count$startTime)
+# Plot
+ggplot(cycle_count, aes(x = Date, y = count, colour = as.factor(location))) +
+  geom_line() +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+This is a bit noisy so lets sum the counts for all locations to see total
+cycle counts.
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+
+# Group by date and sum the count
+sum_cycle_count <- cycle_count %>%
+  group_by(Date) %>% 
+  summarise(`Total Count` = sum(count))
+#  Graph the new `sum_count` variable
+ggplot(sum_cycle_count, aes(x = Date, y = `Total Count`)) + 
+  geom_line(colour = "blue") +
+  theme_minimal()
+
+```
+
+We can also use the latitude and longitude columns to plot the points on a map.
+
+```{r}
+library(sf)
+# Convert data frame into 'sf' geospatial dataframe
+cycle_counts_geo <- st_as_sf(cycle_count, coords = c("longitude", "latitude"))
+# Sum counts by location
+cycle_counts_geo_sum <- cycle_counts_geo %>%
+  group_by(location) %>% 
+  summarise(`Total Cycle Count` = sum(count))
+# plot
+c <- ggplot(cycle_counts_geo_sum) +
+  geom_sf(aes(size = `Total Cycle Count`), colour = "blue", fill = NA) +
+  theme_minimal()
+c
+```
+
+Can you guess which points in Glasgow are most popular for cyclists? We can add
+a base layer map to reveal the streets.
+
+```{r, message=FALSE}
+library(ggmap)
+library(purrr)
+
+# Create bounding box to download background street map layer
+bbox_glasgow <- map_dbl(st_bbox(cycle_counts_geo_sum), 1)
+names(bbox_glasgow) <- c("left", "bottom", "right", "top")
+
+# Download background layer
+glasgow <- suppressMessages(ggmap(get_stamenmap(bbox_glasgow, zoom = 14)))
+
+# Plot background with cycle counts on top
+cycle_map <- glasgow + geom_point(data = cycle_counts_geo_sum,
+                                aes(
+                                x = unlist(map(geometry,1)),
+                                y = unlist(map(geometry,2)),
+                                size = `Total Cycle Count`),
+                                col="green", 
+                                pch=16, 
+                                alpha=0.4
+                          ) + 
+  theme_minimal() + 
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+  
+
+cycle_map 
+```
+
+Looks like [Tradeston](https://www.openstreetmap.org/#map=16/55.8530/-4.2606) area is a hot spot for cyclists.

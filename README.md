@@ -13,11 +13,13 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 <!-- badges: end -->
 
 `opendatascotland` is an R package to download and locally cache data
-from [opendata.scot](https://opendata.scot/).
+from [opendata.scot](https://opendata.scot/). This helps to quickly
+start data analysis without needing to work out how to save, organise
+and import data in R.
 
 ## Installation
 
-You can install the development version of opendatascot from
+You can install the development version of `opendatascotland` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -25,9 +27,10 @@ You can install the development version of opendatascot from
 devtools::install_github("fozy81/opendatascot")
 ```
 
-## Example
+## Search
 
-#### Search or view all datasets available on [opendata.scot](https://opendata.scot/)
+Use `ods_search()` function to view metadata for all datasets or filter
+by matching search terms in the dataset’s title.
 
 ``` r
 library(opendatascotland)
@@ -39,32 +42,49 @@ single_query <- search_ods("Number of bikes")
 
 # Search multiple terms
 multi_query <- search_ods(c("Bins", "Number of bikes"))
+head(multi_query, 4)
+#> # A tibble: 4 × 11
+#>   unique_id            title organization notes category url   resources licence
+#>   <chr>                <chr> <chr>        <chr> <list>   <chr> <list>    <chr>  
+#> 1 Communal_Bins_City_… Comm… City of Edi… "<p>… <chr>    /dat… <df>      No lic…
+#> 2 Grit_Bins_City_of_E… Grit… City of Edi… "<p>… <chr>    /dat… <df>      No lic…
+#> 3 Salt_Bins_Dumfries_… Salt… Dumfries an… "<p>… <chr>    /dat… <df>      UK Ope…
+#> 4 Public_Litter_Bins_… Publ… Dundee City… "<p>… <chr>    /dat… <df>      UK Ope…
+#> # … with 3 more variables: date_created <chr>, date_updated <chr>,
+#> #   org_type <chr>
 ```
 
-#### Download datasets
+Note, search term is case-insensitive but word order must be correct
+(there is no ‘fuzzy’ matching).
+
+#### Download
+
+Currently, only datasets available in `.csv`, `.json` or `.geojson` can
+be downloaded. These formats cover the majority of data available. You
+will be warned if a data can’t be downloaded.
+
+To download data, you can either download the metadata using
+`search_ods()`, then pass that data frame to `get_ods()`
 
 ``` r
-query <- search_ods("Number of bikes")
+query <- search_ods("Grit bins")
 data <- get_ods(query)
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+#> 'Grit Bins' dataset was last downloaded on 2022-07-24
+#> 'Grit Bins' dataset was last downloaded on 2022-07-24
 ```
 
-Or use the search parameter in get_ods to search
+Or use the search argument in `get_ods(search="my search term")` to
+search and download matching datasets in one step.
 
 ``` r
-data <- get_ods(search = "Number of bikes")
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2016 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2017 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2018 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
-#> 'Number of bikes available for private use - Travel and Transport Scotland 2019 - Scottish Household Survey' dataset was last downloaded on 2022-07-24
+data <- get_ods(search = "Grit bins")
+#> 'Grit Bins' dataset was last downloaded on 2022-07-24
+#> 'Grit Bins' dataset was last downloaded on 2022-07-24
 ```
 
-By default you be ask if you want to save the data locally on the first
-download. Optionally, you can refresh the data or avoid being asked to
-save data.
+By default, you will be asked if you want to save the data locally on
+the first download. Optionally, you can refresh the data or avoid being
+asked to save data.
 
 ``` r
 data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
@@ -76,7 +96,7 @@ data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 data <- get_ods(search = "Air Quality - Diffusion Tubes")
 ```
 
-The get_ods() function returned a named list of data frames - lets
+The `get_ods()` function returned a named list of data frames - lets
 select the one we want by name:
 
 ``` r
@@ -90,18 +110,22 @@ Or alternatively select the first data frame in the list using index of
 air_tubes <- data[[1]]
 ```
 
-We can see the data frame is also classed as “sf” which has spatial /
-geometry attributes baked in.
+Geojson datasets are automating converted to [simple
+feature](https://r-spatial.github.io/sf/) ‘sf’ data. As we can see in
+the example the data frame is classed as “sf” which mean spatial /
+geometry attributes are baked in.
 
 ``` r
 class(air_tubes) 
 #> [1] "sf"         "data.frame"
 ```
 
-This means plot function will automatically plot the coordinates.
+These allows the `plot()` function to automatically plot the
+coordinates.
 
 ``` r
-plot(air_tubes$geometry)
+plot(air_tubes$geometry, 
+     col = as.factor(air_tubes$LOCATION))
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />

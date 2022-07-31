@@ -1,14 +1,21 @@
-#' Datasets
-#' @param search A case insensitive search term to fitler datasets. By default
-#'   will return all datasets.
-#' @return dataframe of available datasets (matching search term if provided).
+#' Search Open Data Scot Datasets
+#'
+#' This function will return metadata associated with datasets available on
+#' opendata.scot
+#'
+#' @param search A vector of search terms. Searches are performed on the title
+#'   of the datasets and are case insensitive. If no search terms provided,
+#'   metadata for all datasets will be returned.
+#' @return dataframe of metadata for available datasets (matching search term if
+#'   provided).
 #' @export
 #' @importFrom rlang .data
 #' @importFrom purrr map_dfr
 #' @importFrom tibble as_tibble
 #' @examples
-#' data <- search_ods() # return ALL datasets
+#' all_datasets <- search_ods() # return ALL datasets
 #' data <- search_ods(search = "bicycle") # search datasets
+#' data <- search_ods(search = c("bicycle","bins")) # multiple search terms
 search_ods <- function(search = "") {
   stopifnot(class(search) == "character")
   datasets <- jsonlite::fromJSON("https://opendata.scot/datasets.json",

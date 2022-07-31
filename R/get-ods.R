@@ -1,11 +1,13 @@
-#' Get Data
+#' Get Data From Open Data Scotland
 #'
-#' Return matching data from https://opendata.scot/ API.
+#' Return data from https://opendata.scot/ website. Currently, only datasets in
+#' CSV and GeoJSON formats supported. If data not available in this formats, a
+#' warning is provided. By default data is saved locally to avoid subsequent
+#' download time.
 #'
 #' @param data Dataframe from `search_ods()` or if default (NULL), will download
 #'   all datasets.
-#' @param search Search term(s) if `data` not provided, will use `search_ods()`
-#'   to return a dataframe of matching datasets.
+#' @param search Search term(s) if `data` parameter not provided.
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
 #'   update or renew corrupted data/cache. This will download data again and
 #'   update cache.
@@ -21,7 +23,9 @@
 #' @importFrom gtools ask
 #' @importFrom rappdirs user_data_dir
 #' @importFrom sf st_read
-#' @return list of named data frames.
+#' @importFrom jsonlite fromJSON
+#' @return list of named data frames. GeoJSON data is converted to simple
+#'   features `sf` class to aid spatial analysis.
 #' @export
 #'
 #' @examples
@@ -32,7 +36,7 @@ get_ods <- function(data = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
   if (is.null(data) & is.null(search)) {
-    message("data * search arguments are NULL, downloading all ods datasets!")
+    message("`data` & `search` arguments are NULL, downloading all ods datasets!")
     data <- search_ods()
   }
 
@@ -54,20 +58,32 @@ get_ods <- function(data = NULL,
     file_name <- paste0(file_name, ".rds")
     file_path <- file.path(dir, file_name)
     if (!file.exists(file_path) | refresh) {
-      create_data_dir(dir, ask, dataset)
+      title <- dataset$title
       dataset <- select(dataset, .data$title, .data$resources)
       dataset <- unnest(dataset, cols = "resources")
-      dataset <- filter(dataset, format %in% c("CSV", "GEOJSON"))
+      dataset <- filter(dataset, format %in% c("CSV", "GEOJSON", "JSON"))
       if (nrow(dataset) < 1) {
-        message(paste0("This dataset is not available in a supported format
-(CSV or GEOJSON), try direct download from openscot.data"))
+        warning(paste(title,
+          "Is not available in a supported format (CSV, GEOJSON & JSON), try direct
+download from openscot.data",
+          sep = "\n"
+        ),
+        call. = FALSE
+        )
         return()
       }
+      create_data_dir(dir, ask, dataset[1, ])
       if (any(dataset$format %in% "GEOJSON")) {
         dataset <- filter(dataset, format == "GEOJSON")
         url <- dataset$url[1]
         data <- read_file(url)
         data <- st_read(dsn = data, quiet = TRUE)
+      } else if (any(dataset$format %in% "JSON")) {
+        dataset <- filter(dataset, format == "JSON")
+        url <- dataset$url[1]
+        data <- read_file(url)
+        data <- fromJSON(txt = data, flatten = TRUE)
+        data <- as_tibble(data)
       } else {
         dataset <- filter(dataset, format == "CSV")
         url <- dataset$url[1]
@@ -97,7 +113,7 @@ get_ods <- function(data = NULL,
 
 create_data_dir <- function(dir, ask, dataset) {
   if (ask) {
-    ans <- ask(paste("opendatascot would like to store: ",
+    ans <- ask(paste("opendatascotland would like to store: ",
       dataset$title, " dataset in the directory: ",
       dir, "Is that okay? Key '1' Go ahead",
       sep = "\n"

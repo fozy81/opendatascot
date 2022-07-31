@@ -2,21 +2,25 @@
 % Please edit documentation in R/search-ods.R
 \name{search_ods}
 \alias{search_ods}
-\title{Datasets}
+\title{Search Open Data Scot Datasets}
 \usage{
 search_ods(search = "")
 }
 \arguments{
-\item{search}{A case insensitive search term to fitler datasets. By default
-will return all datasets.}
+\item{search}{A vector of search terms. Searches are performed on the title
+of the datasets and are case insensitive. If no search terms provided,
+metadata for all datasets will be returned.}
 }
 \value{
-dataframe of available datasets (matching search term if provided).
+dataframe of metadata for available datasets (matching search term if
+provided).
 }
 \description{
-Datasets
+This function will return metadata associated with datasets available on
+opendata.scot
 }
 \examples{
-data <- search_ods() # return ALL datasets
+all_datasets <- search_ods() # return ALL datasets
 data <- search_ods(search = "bicycle") # search datasets
+data <- search_ods(search = c("bicycle","bins")) # multiple search terms
 }

@@ -1,6 +1,7 @@
-pandoc: 2.17.1.1
+pandoc: '2.18'
 pkgdown: 2.0.3
 pkgdown_sha: ~
-articles: {}
-last_built: 2022-07-03T11:53Z
+articles:
+  basic-usage: basic-usage.html
+last_built: 2022-07-31T15:06Z
 

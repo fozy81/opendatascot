@@ -1,6 +1,6 @@
 Package: opendatascotland
 Title: Download data from OpenData.Scot
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Tim", "Foster", , "fozy81@hotmail.com", role = c("aut", "cre"))
 Description: R library wrapper for datasets compiled on opendata.scot website.
@@ -20,7 +20,10 @@ Imports:
   tibble,
   tidyr
 Suggests: 
-  hexSticker,
-  pkgdown,
-  testthat (>= 3.0.0)
+    hexSticker,
+    knitr,
+    pkgdown,
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr
