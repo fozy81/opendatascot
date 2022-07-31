@@ -31,6 +31,6 @@ warning is provided. By default data is saved locally to avoid subsequent
 download time.
 }
 \examples{
-search <- search_ods("Number of bikes")
+search <- search_ods("Grit bins")
 data <- get_ods(search, refresh = TRUE, ask = FALSE)
 }

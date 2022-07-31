@@ -57,7 +57,7 @@ head(multi_query, 4)
 Note, search term is case-insensitive but word order must be correct
 (there is no ‘fuzzy’ matching).
 
-#### Download
+## Download
 
 Currently, only datasets available in `.csv`, `.json` or `.geojson` can
 be downloaded. These formats cover the majority of data available. You
@@ -69,8 +69,8 @@ To download data, you can either download the metadata using
 ``` r
 query <- search_ods("Grit bins")
 data <- get_ods(query)
-#> 'Grit Bins' dataset was last downloaded on 2022-07-24
-#> 'Grit Bins' dataset was last downloaded on 2022-07-24
+#> 'Grit Bins' dataset was last downloaded on 2022-07-31
+#> 'Grit Bins' dataset was last downloaded on 2022-07-31
 ```
 
 Or use the search argument in `get_ods(search="my search term")` to
@@ -78,8 +78,8 @@ search and download matching datasets in one step.
 
 ``` r
 data <- get_ods(search = "Grit bins")
-#> 'Grit Bins' dataset was last downloaded on 2022-07-24
-#> 'Grit Bins' dataset was last downloaded on 2022-07-24
+#> 'Grit Bins' dataset was last downloaded on 2022-07-31
+#> 'Grit Bins' dataset was last downloaded on 2022-07-31
 ```
 
 By default, you will be asked if you want to save the data locally on
@@ -90,7 +90,7 @@ asked to save data.
 data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 
-#### Plot datasets
+## Plot
 
 ``` r
 data <- get_ods(search = "Air Quality - Diffusion Tubes")

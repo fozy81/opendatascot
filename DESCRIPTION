@@ -20,10 +20,13 @@ Imports:
   tibble,
   tidyr
 Suggests: 
-    hexSticker,
-    knitr,
-    pkgdown,
-    rmarkdown,
-    testthat (>= 3.0.0)
+  ggmap,
+  ggplot2,
+  hexSticker,
+  knitr,
+  magrittr,
+  pkgdown,
+  rmarkdown,
+  testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -57,7 +57,7 @@ head(multi_query, 4)
 Note, search term is case-insensitive but word order must be correct (there is
 no 'fuzzy' matching).
 
-#### Download
+## Download
 
 Currently, only datasets available in `.csv`, `.json` or `.geojson` can be
 downloaded. These formats cover the majority of data available. You will be
@@ -85,7 +85,7 @@ data.
 ```r
 data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
-#### Plot datasets
+## Plot
 
 ```{r, echo=FALSE, message=FALSE}
 data <- get_ods(search = "Air Quality - Diffusion Tubes")

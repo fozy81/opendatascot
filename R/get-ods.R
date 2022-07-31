@@ -29,7 +29,7 @@
 #' @export
 #'
 #' @examples
-#' search <- search_ods("Number of bikes")
+#' search <- search_ods("Grit bins")
 #' data <- get_ods(search, refresh = TRUE, ask = FALSE)
 get_ods <- function(data = NULL,
                     search = NULL,
@@ -78,16 +78,16 @@ download from openscot.data",
         url <- dataset$url[1]
         data <- read_file(url)
         data <- st_read(dsn = data, quiet = TRUE)
-      } else if (any(dataset$format %in% "JSON")) {
+      } else if (any(dataset$format %in% "CSV")) {
+        dataset <- filter(dataset, format == "CSV")
+        url <- dataset$url[1]
+        data <- read_csv(url, show_col_types = FALSE)
+        data <- as_tibble(data)
+      } else {
         dataset <- filter(dataset, format == "JSON")
         url <- dataset$url[1]
         data <- read_file(url)
         data <- fromJSON(txt = data, flatten = TRUE)
-        data <- as_tibble(data)
-      } else {
-        dataset <- filter(dataset, format == "CSV")
-        url <- dataset$url[1]
-        data <- read_csv(url, show_col_types = FALSE)
         data <- as_tibble(data)
       }
       wd <- getwd()
