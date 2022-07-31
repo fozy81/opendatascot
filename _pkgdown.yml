@@ -7,5 +7,5 @@ navbar:
     text: Docs
     menu:
     - text: Basic Examples
-      href: articles/basics-usage.html
+      href: articles/basic-usage.html
 
