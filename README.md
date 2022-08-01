@@ -64,7 +64,7 @@ Note, search term is case-insensitive but word order must be correct
 
 Currently, only datasets available in `.csv`, `.json` or `.geojson` can
 be downloaded. These formats cover the majority of data available. You
-will be warned if a data can’t be downloaded.
+will be warned if data can’t be downloaded.
 
 To download data, you can either download the metadata using
 `search_ods()`, then pass that data frame to `get_ods()`
@@ -116,15 +116,15 @@ air_tubes <- data[[1]]
 Geojson datasets are automating converted to [simple
 feature](https://r-spatial.github.io/sf/) ‘sf’ data. As we can see in
 the example the data frame is classed as “sf” which mean spatial /
-geometry attributes are baked in.
+geometry coordinates are held in a `geometry` column.
 
 ``` r
 class(air_tubes) 
 #> [1] "sf"         "data.frame"
 ```
 
-These allows the `plot()` function to automatically plot the
-coordinates.
+These allows the `plot()` function to automatically plot the coordinates
+in the geometry column.
 
 ``` r
 plot(air_tubes$geometry, 

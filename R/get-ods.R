@@ -1,19 +1,19 @@
 #' Get Data From Open Data Scotland
 #'
 #' Return data from https://opendata.scot/ website. Currently, only datasets in
-#' CSV and GeoJSON formats supported. If data not available in this formats, a
-#' warning is provided. By default data is saved locally to avoid subsequent
-#' download time.
+#' CSV, JSON and GeoJSON formats supported. If data is not available in these
+#' formats, a warning is provided. By default data is saved locally to avoid
+#' re-downloading on subsequent requests.
 #'
 #' @param data Dataframe from `search_ods()` or if default (NULL), will download
 #'   all datasets.
 #' @param search Search term(s) if `data` parameter not provided.
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
 #'   update or renew corrupted data/cache. This will download data again and
-#'   update cache.
+#'   update the cache.
 #' @param ask If FALSE, user will not be prompted for input to download data.
-#'   This is useful to automate data downloads and cache updated or speed up the
-#'   process if downloading many datasets at once.
+#'   This is useful to automate data downloads and cache updated, or speed-up
+#'   the process if downloading many datasets at once.
 #'
 #' @importFrom rlang .data
 #' @importFrom tibble as_tibble
