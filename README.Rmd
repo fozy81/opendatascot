@@ -20,11 +20,13 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test coverage](https://codecov.io/gh/fozy81/opendatascot/branch/master/graph/badge.svg)](https://app.codecov.io/gh/fozy81/opendatascot?branch=master)
 <!-- badges: end -->
 
-`opendatascotland` is an R package to download and locally cache data from
-[opendata.scot](https://opendata.scot/). This helps to quickly start data
-analysis without needing to work out how to save, organise and import data in R.
+`opendatascotland` is an [R](https://www.r-project.org/) package to download and
+locally cache data from the amazing [opendata.scot](https://opendata.scot/)
+website. This helps to quickly start data analysis by providing a simple way to
+save, organise and import data in R.
 
 ## Installation
 
