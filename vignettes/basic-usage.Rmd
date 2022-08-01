@@ -136,11 +136,19 @@ to a data frame.
 Let's download the Glasgow cycle counts data which is only available in JSON
 format.
 
+
+```{r, echo=FALSE, message=FALSE}
+cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE, refresh = TRUE)
+```
+
+```{r
+cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
+```
 ```{r}
-cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE)
 cycle_count <- cycle_count[[1]]
 cycle_count
 ```
+
 
 We can see the cycle count JSON has been converted into a 'flat' tabulated data
 frame. This data frame can now be plotted as a chart, in the following example,
