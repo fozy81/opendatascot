@@ -40,8 +40,7 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Search
 
-Use `ods_search()` function to view metadata for all datasets or filter by
-matching search terms in the dataset's title.
+Search all available datasets by using the `ods_search()` function. Additionally, use the `search` argument to filter datasets by title.
 
 ```{r search}
 library(opendatascotland)
@@ -118,7 +117,8 @@ coordinates are held in a `geometry` column.
 class(air_tubes) 
 ```
 
-These allows the `plot()` function to automatically plot the coordinates in the geometry column.
+These allows the `plot()` function to automatically plot the coordinates in the
+geometry column.
 
 ```{r}
 plot(air_tubes$geometry, 

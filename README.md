@@ -32,8 +32,8 @@ devtools::install_github("fozy81/opendatascot")
 
 ## Search
 
-Use `ods_search()` function to view metadata for all datasets or filter
-by matching search terms in the dataset’s title.
+Search all available datasets by using the `ods_search()` function.
+Additionally, use the `search` argument to filter datasets by title.
 
 ``` r
 library(opendatascotland)
