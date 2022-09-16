@@ -103,7 +103,9 @@ trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
 # Plot bar chart
 month_plot <- trips %>% 
   ggplot(aes(x = month)) +
-  geom_bar(aes(fill = year)) +
+  geom_bar(aes(fill = ..count..)) +
+  # scale_fill_discrete(name = "Year") +
+  scale_fill_gradient(low = "pink", high = "blue") +
   theme_minimal()
 
 month_plot
