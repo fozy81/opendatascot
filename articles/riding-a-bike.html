@@ -106,8 +106,9 @@
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
+<span>     <span class="va">`START LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.0</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">5.0</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span> <span class="op">&amp;</span></span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`Start time`</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -115,14 +116,10 @@
 </h3>
 <p>Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at 4am.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert date character to 'proper' date type</span></span>
-<span><span class="va">trips</span><span class="op">$</span><span class="va">start_time_day</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">dmy_hm</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
-<span><span class="co"># Start time of day (hour)</span></span>
-<span><span class="va">trips</span><span class="op">$</span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">start_time_day</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Start time of day (hour)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># hist(trips$start_time_day)</span></span>
 <span><span class="co"># ggplot bar chart</span></span>
-<span></span>
 <span><span class="va">hour_plot</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hour</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">..count..</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
