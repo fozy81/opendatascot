@@ -130,7 +130,7 @@ cycle_map <- map + geom_point(data = trips,
                                 x = unlist(map(geometry,1)),
                                 y = unlist(map(geometry,2))
                                 ),
-                                col="green", 
+                                colour="green", 
                                 pch=16, 
                                 alpha=0.4
                           ) + 
