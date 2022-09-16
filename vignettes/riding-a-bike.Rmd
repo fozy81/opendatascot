@@ -74,16 +74,18 @@ Quiet at 4am.
 # Convert date character to 'proper' date type
 trips$start_time_day <- dmy_hm(trips$`Start time`)
 # Start time of day (hour)
-trips$start_time_day <- hour(trips$start_time_day)
+trips$hour <- hour(trips$start_time_day)
 
 # hist(trips$start_time_day)
-# ggplot histogram
-ggplot(trips, aes(`start_time_day`, fill = ..count..)) +
-  geom_histogram() +
-  stat_bin(binwidth = 1) +
+# ggplot bar chart
+
+hour_plot <- trips %>% 
+  ggplot(aes(x = hour)) +
+  geom_bar(aes(fill = ..count..)) +
   scale_fill_gradient(low = "pink", high = "blue") +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
+
+hour_plot
 ```
 
 ### Annual monthly usage
@@ -98,13 +100,13 @@ trips$year <- as.character(year(trips$start_time_day))
 # Extract month as abbreviated 'Aug'...
 trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
 
-# Plot barchart
-plot <- trips %>% 
+# Plot bar chart
+month_plot <- trips %>% 
   ggplot(aes(x = month)) +
   geom_bar(aes(fill = year)) +
   theme_minimal()
 
-plot
+month_plot
 ```
 
 ### Map trip start points
