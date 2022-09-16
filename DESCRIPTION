@@ -24,11 +24,14 @@ Suggests:
     ggmap,
     ggplot2,
     hexSticker,
+    hms,
+    lubridate,
     knitr,
     magrittr,
     pkgdown,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyerse
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://fozy81.github.io/opendatascot/
