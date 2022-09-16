@@ -61,13 +61,13 @@ trips <- trips %>% filter(!is.na(`START LAT`) &
 Looks as expected: Peaks in Morning 7.30-9.30 and evening around 6pm. Most quiet at 4am.
 
 ```{r , echo = TRUE}
-# Start time of day?
+# Convert date character to 'proper' date type
 trips$start_time_day <- dmy_hm(trips$`Start time`)
+# Start time of day (hour)
 trips$start_time_day <- hour(trips$start_time_day)
 
-
-
 # hist(trips$start_time_day)
+# ggplot histogram
 ggplot(trips, aes(`start_time_day`, fill = ..count..)) +
   geom_histogram() +
   stat_bin(binwidth = 1) +
@@ -81,25 +81,22 @@ ggplot(trips, aes(`start_time_day`, fill = ..count..)) +
 Significant usage in winter. But almost a doubling of usage in summer months.
 
 ```{r}
-# Start month?
+# Convert date character to 'proper' date type from character type.
 trips$start_time_day <- dmy_hm(trips$`Start time`)
+# Extract year (as character to help plot as discrete categories in chart)
 trips$year <- as.character(year(trips$start_time_day))
+# Extract month as abbreviated 'Aug'...
 trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
 
-trips <- trips %>% 
-  group_by(month, year) %>% 
-  mutate(monthly_count = n())
-
+# Group by month and year, count trips per month and then plot
 plot <- trips %>%
-  select(year, month, monthly_count) %>% 
-  unique() %>% 
+  group_by(month, year) %>%
+  summarise(monthly_count = n()) %>%
   ggplot(aes(x = month, y = monthly_count, fill = year)) +
-         geom_col() +
-    theme_minimal() 
-  
+  geom_col() +
+  theme_minimal()
+
 plot
-
-
 ```
 
 ### Map trip start points
@@ -114,7 +111,7 @@ trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 bbox <- map_dbl(st_bbox(trips), 1)
 names(bbox) <- c("left", "bottom", "right", "top")
 
-# Download background map
+# Download background map using bounding box
 map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 11)))
 
 # Plot background with trips start points on top
