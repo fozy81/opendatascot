@@ -101,9 +101,9 @@ trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
 # Group by month and year, count trips per month and then plot
 plot <- trips %>%
   group_by(month, year) %>%
-  summarise(monthly_count = n()) %>%
-  ggplot(aes(x = month, y = monthly_count, fill = year)) +
-  geom_col(aes(colour = year)) +
+  summarise(monthly_count = n(), .groups = "drop") %>%
+  ggplot(aes(x = month, y = monthly_count)) +
+  geom_col(aes(colour = year,  fill = year)) +
   theme_minimal()
 
 plot
