@@ -83,7 +83,7 @@
 <h3 id="confirm-licence">Confirm licence<a class="anchor" aria-label="anchor" href="#confirm-licence"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Search and download</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span>  <span class="fu">search_ods</span>(<span class="at">search =</span> <span class="st">"Next Bike Cycle Hire - Glasgow"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">search_ods</span>(<span class="at">search =</span> <span class="st">"Next Bike Cycle Hire - Glasgow"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>licence</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> [<span class="dv">1</span>] <span class="st">"UK Open Government Licence"</span></span></code></pre></div>
 </div>
@@ -97,16 +97,18 @@
 <h3 id="tidy-data">Tidy data<a class="anchor" aria-label="anchor" href="#tidy-data"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Data is returned as a list, extract single list item into a data frame</span></span>
-<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">$</span><span class="va">`Next_Bike_Cycle_Hire_-_Glasgow_Trip_Data__2017-2022__Cycling_Scotland`</span></span>
+<code class="sourceCode R"><span><span class="co"># Data is returned as a list of data frames, extract first data frame in the</span></span>
+<span><span class="co"># list.</span></span>
+<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Clean out weird points:</span></span>
 <span><span class="co"># hist(trips$`START LAT`)</span></span>
-<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span> </span>
-<span>                            <span class="va">`START LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
-<span>                            <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.0</span> <span class="op">&amp;</span></span>
-<span>                             <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">5.0</span> <span class="op">&amp;</span></span>
-<span>                            <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`Start time`</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
+<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`START LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.0</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">5.0</span> <span class="op">&amp;</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`Start time`</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="average-start-time-over-24hrs">Average start time over 24hrs<a class="anchor" aria-label="anchor" href="#average-start-time-over-24hrs"></a>
