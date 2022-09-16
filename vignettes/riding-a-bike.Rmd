@@ -61,8 +61,9 @@ trips <- trips[[1]]
 trips <- trips %>%
   filter(!is.na(`START LAT`) &
     `START LAT` < 55.9 &
+     `START LAT` > 55.8 &
     `START LONG` < -4.0 &
-    `START LONG` > -5.0 &
+    `START LONG` > -4.4 &
     !is.na(`Start time`))
 ```
 
@@ -72,14 +73,10 @@ Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm.
 Quiet at 4am.
 
 ```{r, echo = TRUE, warning=FALSE, message=FALSE}
-# Convert date character to 'proper' date type
-trips$start_time_day <- dmy_hm(trips$`Start time`)
 # Start time of day (hour)
-trips$hour <- hour(trips$start_time_day)
+trips$hour <- hour(trips$`Start time`)
 
-# hist(trips$start_time_day)
 # ggplot bar chart
-
 hour_plot <- trips %>% 
   ggplot(aes(x = hour)) +
   geom_bar(aes(fill = ..count..)) +
@@ -94,19 +91,15 @@ hour_plot
 Significant usage in winter. But almost a doubling of usage in summer months.
 
 ```{r, warning=FALSE, message=FALSE}
-# Convert date character to 'proper' date type from character type.
-trips$start_time_day <- dmy_hm(trips$`Start time`)
 # Extract year (as character to help plot as discrete categories in chart)
-trips$year <- as.character(year(trips$start_time_day))
+trips$year <- as.character(year(trips$`Start time`))
 # Extract month as abbreviated 'Aug'...
-trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
+trips$month <- month(trips$`Start time`, abbr = TRUE, label = TRUE)
 
 # Plot bar chart
 month_plot <- trips %>% 
   ggplot(aes(x = month)) +
-  geom_bar(aes(fill = ..count..)) +
-  # scale_fill_discrete(name = "Year") +
-  scale_fill_gradient(low = "pink", high = "blue") +
+  geom_bar(aes(fill = year)) +
   theme_minimal()
 
 month_plot
