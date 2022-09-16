@@ -8,4 +8,6 @@ navbar:
     menu:
     - text: Basic Examples
       href: articles/basic-usage.html
+    - text: Riding a Bike
+      href: articles/riding-a-bike.html
 

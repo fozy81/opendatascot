@@ -14,11 +14,11 @@ all datasets.}
 
 \item{refresh}{Refresh cached data. If data has changed remotely, use this to
 update or renew corrupted data/cache. This will download data again and
-update cache.}
+update the cache.}
 
 \item{ask}{If FALSE, user will not be prompted for input to download data.
-This is useful to automate data downloads and cache updated or speed up the
-process if downloading many datasets at once.}
+This is useful to automate data downloads and cache updated, or speed-up
+the process if downloading many datasets at once.}
 }
 \value{
 list of named data frames. GeoJSON data is converted to simple
@@ -26,9 +26,9 @@ features \code{sf} class to aid spatial analysis.
 }
 \description{
 Return data from https://opendata.scot/ website. Currently, only datasets in
-CSV and GeoJSON formats supported. If data not available in this formats, a
-warning is provided. By default data is saved locally to avoid subsequent
-download time.
+CSV, JSON and GeoJSON formats supported. If data is not available in these
+formats, a warning is provided. By default data is saved locally to avoid
+re-downloading on subsequent requests.
 }
 \examples{
 search <- search_ods("Grit bins")

@@ -47,11 +47,11 @@ get_ods <- function(data = NULL,
   if (!is.null(search)) {
     data <- search_ods(search)
   }
-
+  if(is.null(search)) {
   stopifnot("data must be a dataframe" = any(class(data) %in% "data.frame"))
   stopifnot("data must have more than one row" = nrow(data) != 0)
   stopifnot("data must have `unique_id` column" = !is.null(data$unique_id))
-
+  }
   output <- lapply(split(data, data$unique_id), function(dataset) {
     dir <- opendatascot_dir()
     file_name <- dataset$unique_id

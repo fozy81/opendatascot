@@ -1,0 +1,138 @@
+---
+title: "Riding a Bike"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Riding a Bike}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  fig.width = 6.5,
+  fig.height = 5,
+  echo = FALSE
+  
+)
+```
+
+Download Glasgow bike hire data and visualise.
+
+```{r setup, echo=TRUE, message=FALSE}
+library(opendatascotland)
+library(sf)
+library(tidyverse)
+library(ggmap)
+library(hms)
+library(lubridate)
+```
+
+### Download and tidy data
+
+Confirm licence
+
+```{r , echo = TRUE, comment=">>"}
+# Search and download
+metadata <-  search_ods(search = "Next Bike Cycle Hire - Glasgow")
+metadata$licence
+```
+
+Tidy data
+
+```{r , echo = TRUE}
+data <- get_ods(search = 'Next Bike Cycle Hire - Glasgow')
+trips <- data$`Next_Bike_Cycle_Hire_-_Glasgow_Trip_Data__2017-2022__Cycling_Scotland`
+
+# Clean out weird points:
+# hist(trips$`START LAT`)
+trips <- trips %>% filter(!is.na(`START LAT`) & 
+                            `START LAT` < 55.9 &
+                            `START LONG` < -4.0 &
+                             `START LONG` > -5.0 &
+                            !is.na(`Start time`) )
+```
+
+### Average start time over 24hrs
+
+Looks as expected: Peaks in Morning 7.30-9.30 and evening around 6pm. Most quiet at 4am.
+
+```{r , echo = TRUE}
+# Start time of day?
+trips$start_time_day <- dmy_hm(trips$`Start time`)
+trips$start_time_day <- hour(trips$start_time_day)
+
+
+
+# hist(trips$start_time_day)
+ggplot(trips, aes(`start_time_day`, fill = ..count..)) +
+  geom_histogram() +
+  stat_bin(binwidth = 1) +
+  scale_fill_gradient(low = "pink", high = "blue") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### Annual monthly usage
+
+Significant usage in winter. But almost a doubling of usage in summer months.
+
+```{r}
+# Start month?
+trips$start_time_day <- dmy_hm(trips$`Start time`)
+trips$year <- as.character(year(trips$start_time_day))
+trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
+
+trips <- trips %>% 
+  group_by(month, year) %>% 
+  mutate(monthly_count = n())
+
+plot <- trips %>%
+  select(year, month, monthly_count) %>% 
+  unique() %>% 
+  ggplot(aes(x = month, y = monthly_count, fill = year)) +
+         geom_col() +
+    theme_minimal() 
+  
+plot
+
+
+```
+
+### Map trip start points
+
+Background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright).
+
+```{r , echo = TRUE, fig.height = 4}
+# Convert data frame into 'sf' geospatial dataframe
+trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
+
+# Bounding box for background map
+bbox <- map_dbl(st_bbox(trips), 1)
+names(bbox) <- c("left", "bottom", "right", "top")
+
+# Download background map
+map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 11)))
+
+# Plot background with trips start points on top
+cycle_map <- map + geom_point(data = trips,
+                                aes(
+                                x = unlist(map(geometry,1)),
+                                y = unlist(map(geometry,2))
+                                ),
+                                col="green", 
+                                pch=16, 
+                                alpha=0.4
+                          ) + 
+  theme_minimal() + 
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+  
+
+cycle_map 
+
+
+```
