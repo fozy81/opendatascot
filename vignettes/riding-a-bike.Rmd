@@ -12,11 +12,10 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>", 
+  comment = "#>",
   fig.width = 6.5,
   fig.height = 5,
   echo = FALSE
-  
 )
 ```
 
@@ -37,7 +36,7 @@ library(lubridate)
 
 ```{r, echo = TRUE, comment=">>"}
 # Search and download
-metadata <-  search_ods(search = "Next Bike Cycle Hire - Glasgow")
+metadata <- search_ods(search = "Next Bike Cycle Hire - Glasgow")
 metadata$licence
 ```
 
@@ -53,16 +52,18 @@ data <- get_ods(metadata)
 ###  Tidy data
 
 ```{r, echo = TRUE}
-# Data is returned as a list, extract single list item into a data frame
-trips <- trips$`Next_Bike_Cycle_Hire_-_Glasgow_Trip_Data__2017-2022__Cycling_Scotland`
+# Data is returned as a list of data frames, extract first data frame in the
+# list.
+trips <- trips[[1]]
 
 # Clean out weird points:
 # hist(trips$`START LAT`)
-trips <- trips %>% filter(!is.na(`START LAT`) & 
-                            `START LAT` < 55.9 &
-                            `START LONG` < -4.0 &
-                             `START LONG` > -5.0 &
-                            !is.na(`Start time`) )
+trips <- trips %>%
+  filter(!is.na(`START LAT`) &
+    `START LAT` < 55.9 &
+    `START LONG` < -4.0 &
+    `START LONG` > -5.0 &
+    !is.na(`Start time`))
 ```
 
 ### Average start time over 24hrs
@@ -115,7 +116,7 @@ month_plot
 
 Background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright).
 
-```{r, echo = TRUE, fig.height = 4, warning=FALSE, message=FALSE}
+```{r, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 
