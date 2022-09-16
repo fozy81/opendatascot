@@ -31,7 +31,7 @@ Suggests:
     pkgdown,
     rmarkdown,
     testthat (>= 3.0.0),
-    tidyerse
+    tidyverse
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://fozy81.github.io/opendatascot/
