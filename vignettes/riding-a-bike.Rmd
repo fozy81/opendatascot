@@ -70,7 +70,7 @@ trips <- trips %>% filter(!is.na(`START LAT`) &
 Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm.
 Quiet at 4am.
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, warning=FALSE, message=FALSE}
 # Convert date character to 'proper' date type
 trips$start_time_day <- dmy_hm(trips$`Start time`)
 # Start time of day (hour)
@@ -90,7 +90,7 @@ ggplot(trips, aes(`start_time_day`, fill = ..count..)) +
 
 Significant usage in winter. But almost a doubling of usage in summer months.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # Convert date character to 'proper' date type from character type.
 trips$start_time_day <- dmy_hm(trips$`Start time`)
 # Extract year (as character to help plot as discrete categories in chart)
@@ -113,7 +113,7 @@ plot
 
 Background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright).
 
-```{r, echo = TRUE, fig.height = 4}
+```{r, echo = TRUE, fig.height = 4, warning=FALSE, message=FALSE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 
@@ -125,21 +125,21 @@ names(bbox) <- c("left", "bottom", "right", "top")
 map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 11)))
 
 # Plot background with trips start points on top
-cycle_map <- map + geom_point(data = trips,
-                                aes(
-                                x = unlist(map(geometry,1)),
-                                y = unlist(map(geometry,2))
-                                ),
-                                colour="green", 
-                                pch=16, 
-                                alpha=0.4
-                          ) + 
-  theme_minimal() + 
-  theme(axis.title = element_blank(),
-        axis.text = element_blank())
-  
+cycle_map <- map + geom_point(
+  data = trips,
+  aes(
+    x = unlist(map(geometry, 1)),
+    y = unlist(map(geometry, 2))
+  ),
+  colour = "green",
+  pch = 16,
+  alpha = 0.4
+) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank()
+  )
 
-cycle_map 
-
-
+cycle_map
 ```
