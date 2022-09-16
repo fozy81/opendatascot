@@ -98,12 +98,10 @@ trips$year <- as.character(year(trips$start_time_day))
 # Extract month as abbreviated 'Aug'...
 trips$month <- month(trips$start_time_day, abbr = TRUE, label = TRUE)
 
-# Group by month and year, count trips per month and then plot
-plot <- trips %>%
-  group_by(month, year) %>%
-  summarise(monthly_count = n(), .groups = "drop") %>%
-  ggplot(aes(x = month, y = monthly_count)) +
-  geom_col(aes(colour = year,  fill = year)) +
+# Plot barchart
+plot <- trips %>% 
+  ggplot(aes(x = month)) +
+  geom_bar(aes(fill = year)) +
   theme_minimal()
 
 plot
