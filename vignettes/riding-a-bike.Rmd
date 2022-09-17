@@ -19,20 +19,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-Download Glasgow bike hire data and visualise.
+Let's take a look at the Glasgow bike hire trip data. Firstly, load all the libraries we'll need for the analysis. Note, you may need to install these first.
 
 ```{r setup, echo=TRUE, message=FALSE}
+# install.packages("devtools")
+# devtools::install_github("fozy81/opendatascot")
 library(opendatascotland)
 library(sf)
 library(tidyverse)
 library(ggmap)
 library(hms)
 library(lubridate)
+library(knitr)
 ```
 
-### Confirm licence
+### Download Meta-data
 
-
+Search [opendata.scot](opendata.scot) for meta-data about Glasgow Next Bike Cycle Hire trips, this describes the data and who provides it. Also we can confirm which open data licence is being used.
 
 ```{r, echo = TRUE, comment=">>"}
 # Search and download
@@ -42,35 +45,59 @@ metadata$licence
 
 ### Download
 
+Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
+
 ```{r, echo=FALSE, message=FALSE}
 trips <- get_ods(metadata, ask = FALSE)
-```
-
-``` {r
-data <- get_ods(metadata)
-```
-###  Tidy data
-
-```{r, echo = TRUE}
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
 trips <- trips[[1]]
+```
 
-# Clean out weird points:
-# hist(trips$`START LAT`)
-trips <- trips %>%
-  filter(!is.na(`START LAT`) &
-    `START LAT` < 55.9 &
-     `START LAT` > 55.8 &
-    `START LONG` < -4.0 &
-    `START LONG` > -4.4 &
-    !is.na(`Start time`))
+``` {r
+trips <- get_ods(metadata)
+# Data is returned as a list of data frames, extract first data frame in the
+# list.
+trips <- trips[[1]]
+```
+
+### Summary
+
+Here we'll get some summary stats to help us understand the data.
+
+```{r, echo = TRUE}
+median_duration <- paste(round(median(trips$Duration) / 60), "mins")
+
+```
+
+Median trip duration is around: `` `r median_duration` ``
+
+Top 3 start locations:
+
+```{r, echo = TRUE}
+ trips %>% 
+  group_by(`Rental place`) %>% 
+  summarise(count = n()) %>% 
+   arrange(-count) %>% 
+   head(3) %>% 
+   kable()
+```
+
+Top 3 return locations:
+
+```{r, echo = TRUE}
+ trips %>% 
+  group_by(`Return place`) %>% 
+  summarise(count = n()) %>% 
+   arrange(-count) %>% 
+   head(3) %>% 
+   kable()
+ 
 ```
 
 ### Average start time over 24hrs
 
-Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm.
-Quiet at 4am.
+Below is a plot of trip start times over 24hrs. Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at 4am.
 
 ```{r, echo = TRUE, warning=FALSE, message=FALSE}
 # Start time of day (hour)
@@ -88,9 +115,9 @@ hour_plot
 
 ### Annual monthly usage
 
-Significant usage in winter. But almost a doubling of usage in summer months.
+We can see significant usage in winter but almost a doubling of usage in summer months. Although, usage in 2022 looks a little unusual.
 
-```{r, warning=FALSE, message=FALSE}
+```{r,  echo = TRUE, warning=FALSE, message=FALSE}
 # Extract year (as character to help plot as discrete categories in chart)
 trips$year <- as.character(year(trips$`Start time`))
 # Extract month as abbreviated 'Aug'...
@@ -107,9 +134,19 @@ month_plot
 
 ### Map trip start points
 
-Background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright).
+Here we plot the start location using background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright). We can see bike hire trips being used widely across the city. There's some strange lat/lon start points which need to be filtered out. Not sure what explains these but filter to a bounding box around Glasgow helps.
 
 ```{r, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE}
+# Clean out weird points:
+# hist(trips$`START LAT`)
+trips <- trips %>%
+  filter(!is.na(`START LAT`) &
+    !is.na(`START LONG`) &
+  `START LAT` < 55.9 &
+  `START LAT` > 55.8 &
+  `START LONG` < -4.0 &
+  `START LONG` > -4.4)
+
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 
@@ -118,7 +155,7 @@ bbox <- map_dbl(st_bbox(trips), 1)
 names(bbox) <- c("left", "bottom", "right", "top")
 
 # Download background map using bounding box
-map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 11)))
+map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 12)))
 
 # Plot background with trips start points on top
 cycle_map <- map + geom_point(
@@ -129,7 +166,7 @@ cycle_map <- map + geom_point(
   ),
   colour = "green",
   pch = 16,
-  alpha = 0.4
+  alpha = 0.6
 ) +
   theme_minimal() +
   theme(
