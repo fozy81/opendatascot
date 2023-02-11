@@ -21,6 +21,7 @@ Imports:
   tidyr
 Suggests: 
     covr,
+    data.table,
     ggmap,
     ggplot2,
     hexSticker,
@@ -30,6 +31,7 @@ Suggests:
     magrittr,
     pkgdown,
     rmarkdown,
+    sfheaders,
     testthat (>= 3.0.0),
     tidyverse
 Config/testthat/edition: 3
