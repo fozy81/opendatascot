@@ -348,8 +348,12 @@ outside Glasgow area - Remove trips with same start and end point</p>
 <span>  keep <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span> <span class="co">## Assume it's in Web Mercator</span></span></code></pre></div>
-<p>Summarize the average ‘as the crow flies’ trip distances: - Max
-distance: 13719 - Min distance: 0.13 - Average distance: 1962</p>
+<p>Summarize the average ‘as the crow flies’ trip distances:</p>
+<ul>
+<li><p><strong>Max distance:</strong> 13719</p></li>
+<li><p><strong>Min distance:</strong> 0.13</p></li>
+<li><p><strong>Average distance:</strong> 1962</p></li>
+</ul>
 </div>
 </div>
 <div class="section level2">
@@ -405,10 +409,10 @@ animate the trips as they are taken.</p>
 <span><span class="op">}</span></span>
 <span><span class="va">video_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output.gif"</span><span class="op">)</span></span>
 <span><span class="fu">av</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/av/reference/capturing.html" class="external-link">av_capture_graphics</a></span><span class="op">(</span><span class="fu">make_plot</span><span class="op">(</span><span class="op">)</span>, <span class="va">video_file</span>, <span class="fl">512</span> , <span class="fl">480</span>, vfilter <span class="op">=</span> <span class="st">"framerate=fps=4"</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="images/output.gif" width="350" alt=""><p class="caption">Animation</p>
-</div>
-<p>This still ends up looking like a blob of colour…</p>
+<p><img alt="Trips Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/output.gif?raw=true" width="350" align="center" src="NA"></p>
+<ul>
+<li>This still ends up looking like a blob of colour…</li>
+</ul>
 </div>
 </div>
 <div class="section level2">
@@ -417,10 +421,10 @@ animate the trips as they are taken.</p>
 <p>Let’s take the start and end point of the trip and use a route
 planning engine to provide a line. This route plan uses the cycle
 network, avoiding busy roads.</p>
-<p>NOTE: This requires using <a href="http://project-osrm.org/" class="external-link">Open
+<p>NOTE: This requires having <a href="http://project-osrm.org/" class="external-link">Open
 Source Routing Machine</a> (OSRM) library to be installed locally.
 Please follow link and install. Additionally, the OpenStreetMap data for
-Scotland needs to be downloaded and installed add to OSRM.</p>
+Scotland needs to be downloaded and add to OSRM.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># loop through sf and find a route from osrm...</span></span>
 <span><span class="va">steps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1000</span>, to <span class="op">=</span> <span class="fl">664586</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span> <span class="op">/</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
@@ -444,7 +448,7 @@ Scotland needs to be downloaded and installed add to OSRM.</p>
 <h3 id="animate-routes">Animate Routes<a class="anchor" aria-label="anchor" href="#animate-routes"></a>
 </h3>
 <p>This section requires <a href="https://ffmpeg.org/" class="external-link">ffmpeg</a> system
-library to be installed give fine control to generating gif and mpegs
+library to be installed to give fine control to generating gif and mpegs
 videos.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">routes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="st">"trips.geojson"</span><span class="op">)</span></span>
@@ -517,9 +521,7 @@ videos.</p>
 to travel A to B using the cycle network. Of course, people hiring bikes
 may have chosen a different route but it gives some idea how the
 transport network in Glasgow looks those hiring bikes.</p>
-<div class="figure">
-<img src="images/routes.gif" width="350" alt=""><p class="caption">Routes Animation</p>
-</div>
+<p><img alt="Routes Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/routes.gif?raw=true" width="350" align="center" src="NA"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
