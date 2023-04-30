@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">opendatascotland</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,67 +75,69 @@
 <div class="section level2">
 <h2 id="search">Search<a class="anchor" aria-label="anchor" href="#search"></a>
 </h2>
-<p>Search all available datasets by using the <code>ods_search()</code> function. Additionally, use the <code>search</code> argument to filter datasets by title.</p>
+<p>Search all available datasets by using the <code><a href="reference/ods_search.html">ods_search()</a></code> function. Additionally, use the <code>search</code> argument to filter datasets by title.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fozy81.github.io/opendatascot/">opendatascotland</a></span><span class="op">)</span></span>
 <span><span class="co"># View all available datasets and associated metadata</span></span>
-<span><span class="va">all_datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/search_ods.html">search_ods</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">all_datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_search.html">ods_search</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Search dataset titles containing matching terms (case insensitive)</span></span>
-<span><span class="va">single_query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/search_ods.html">search_ods</a></span><span class="op">(</span><span class="st">"Number of bikes"</span><span class="op">)</span></span>
+<span><span class="va">single_query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_search.html">ods_search</a></span><span class="op">(</span><span class="st">"Number of bikes"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Search multiple terms</span></span>
-<span><span class="va">multi_query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/search_ods.html">search_ods</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bins"</span>, <span class="st">"Number of bikes"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">multi_query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_search.html">ods_search</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bins"</span>, <span class="st">"Number of bikes"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multi_query</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 11</span></span>
-<span><span class="co">#&gt;   unique_id            title organization notes category url   resources licence</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;list&gt;   &lt;chr&gt; &lt;list&gt;    &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1 Communal_Bins_City_… Comm… City of Edi… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      No lic…</span></span>
-<span><span class="co">#&gt; 2 Grit_Bins_City_of_E… Grit… City of Edi… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      No lic…</span></span>
-<span><span class="co">#&gt; 3 Salt_Bins_Dumfries_… Salt… Dumfries an… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      UK Ope…</span></span>
-<span><span class="co">#&gt; 4 Public_Litter_Bins_… Publ… Dundee City… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      UK Ope…</span></span>
-<span><span class="co">#&gt; # … with 3 more variables: date_created &lt;chr&gt;, date_updated &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   org_type &lt;chr&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;   unique_id    title organ…¹ notes categ…² url   resou…³ licence date_…⁴ date_…⁵</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;list&gt;  &lt;chr&gt; &lt;list&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
+<span><span class="co">#&gt; 1 Salt_Bins_D… Salt… Dumfri… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    UK Ope… 2017-1… 2019-0…</span></span>
+<span><span class="co">#&gt; 2 Public_Litt… Publ… Dundee… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    UK Ope… 2018-0… 2019-0…</span></span>
+<span><span class="co">#&gt; 3 Solar_Power… Sola… Dundee… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    Open D… 2018-0… 2019-0…</span></span>
+<span><span class="co">#&gt; 4 Number_of_b… Numb… Cyclin… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    UK Ope… 2018-0… 2023-0…</span></span>
+<span><span class="co">#&gt; # … with 1 more variable: org_type &lt;chr&gt;, and abbreviated variable names</span></span>
+<span><span class="co">#&gt; #   ¹​organization, ²​category, ³​resources, ⁴​date_created, ⁵​date_updated</span></span></code></pre></div>
 <p>Note, search term is case-insensitive but word order must be correct (there is no ‘fuzzy’ matching).</p>
 </div>
 <div class="section level2">
 <h2 id="download">Download<a class="anchor" aria-label="anchor" href="#download"></a>
 </h2>
 <p>Currently, only datasets available in <code>.csv</code>, <code>.json</code> or <code>.geojson</code> can be downloaded. These formats cover the majority of data available. You will be warned if data can’t be downloaded.</p>
-<p>To download data, you can either download the metadata using <code><a href="reference/search_ods.html">search_ods()</a></code>, then pass that data frame to <code><a href="reference/get_ods.html">get_ods()</a></code></p>
+<p>To download data, you can either download the metadata using <code><a href="reference/ods_search.html">ods_search()</a></code>, then pass that data frame to <code><a href="reference/ods_get.html">ods_get()</a></code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/search_ods.html">search_ods</a></span><span class="op">(</span><span class="st">"Grit bins"</span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_ods.html">get_ods</a></span><span class="op">(</span><span class="va">query</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'Grit Bins' dataset was last downloaded on 2022-07-31</span></span>
-<span><span class="co">#&gt; 'Grit Bins' dataset was last downloaded on 2022-07-31</span></span></code></pre></div>
-<p>Or use the search argument in <code>get_ods(search="my search term")</code> to search and download matching datasets in one step.</p>
+<code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_search.html">ods_search</a></span><span class="op">(</span><span class="st">"bins"</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_get.html">ods_get</a></span><span class="op">(</span><span class="va">query</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'Public Litter Bins' dataset was last downloaded on 2023-04-30</span></span>
+<span><span class="co">#&gt; 'Salt Bins' dataset was last downloaded on 2023-04-30</span></span>
+<span><span class="co">#&gt; 'Solar Powered Compactor Bins' dataset was last downloaded on 2023-04-30</span></span></code></pre></div>
+<p>Or use the search argument in <code>ods_get(search="my search term")</code> to search and download matching datasets in one step.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_ods.html">get_ods</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"Grit bins"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'Grit Bins' dataset was last downloaded on 2022-07-31</span></span>
-<span><span class="co">#&gt; 'Grit Bins' dataset was last downloaded on 2022-07-31</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_get.html">ods_get</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"bins"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'Public Litter Bins' dataset was last downloaded on 2023-04-30</span></span>
+<span><span class="co">#&gt; 'Salt Bins' dataset was last downloaded on 2023-04-30</span></span>
+<span><span class="co">#&gt; 'Solar Powered Compactor Bins' dataset was last downloaded on 2023-04-30</span></span></code></pre></div>
 <p>By default, you will be asked if you want to save the data locally on the first download. Optionally, you can refresh the data or avoid being asked to save data.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_ods.html">get_ods</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"Number of bikes"</span>, refresh <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_get.html">ods_get</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"Number of bikes"</span>, refresh <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_ods.html">get_ods</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"Air Quality - Diffusion Tubes"</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="reference/get_ods.html">get_ods()</a></code> function returned a named list of data frames - lets select the one we want by name:</p>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_get.html">ods_get</a></span><span class="op">(</span>search <span class="op">=</span> <span class="st">"Recycling Point Locations"</span><span class="op">)</span></span></code></pre></div>
+<p>The <code><a href="reference/ods_get.html">ods_get()</a></code> function returned a named list of data frames - lets select the one we want by name:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">air_tubes</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">recycling_points</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">Recycling_Point_Locations_Dundee_City_Council</span></span></code></pre></div>
 <p>Or alternatively select the first data frame in the list using index of 1.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">air_tubes</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">recycling_points</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Geojson datasets are automating converted to <a href="https://r-spatial.github.io/sf/" class="external-link">simple feature</a> ‘sf’ data. As we can see in the example the data frame is classed as “sf” which mean spatial / geometry coordinates are held in a <code>geometry</code> column.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">air_tubes</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">recycling_points</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; [1] "sf"         "data.frame"</span></span></code></pre></div>
 <p>These allows the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function to automatically plot the coordinates in the geometry column.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">air_tubes</span><span class="op">$</span><span class="va">geometry</span>, </span>
-<span>     col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">air_tubes</span><span class="op">$</span><span class="va">LOCATION</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">recycling_points</span><span class="op">$</span><span class="va">geometry</span>, </span>
+<span>     col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">recycling_points</span><span class="op">$</span><span class="va">LOCATION</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 </div>
