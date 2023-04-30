@@ -333,7 +333,7 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 
 ```
 
-<img alt="Trips Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/output.gif?raw=true" width="350" align="center"/>
+<img alt="Trips Animation" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/output.gif?raw=true" width="350" align="center"/>
 
 - This still ends up looking like a blob of colour...
 
@@ -440,4 +440,4 @@ map(plots[1:715], function(plot) {
 
 The resulting animations shows the shortest routes cyclists may use to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
 
-<img alt="Routes Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/routes.gif?raw=true" width="350" align="center"/>
+<img alt="Routes Animation" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/routes.gif?raw=true" width="350" align="center"/>
