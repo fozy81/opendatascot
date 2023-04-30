@@ -270,9 +270,12 @@ sf::st_crs(sf) <- 4326 ## Assume it's in Web Mercator
 ```
 
 Summarize the average 'as the crow flies' trip distances:
-- Max distance: `r round(max(st_length(sf)))`
-- Min distance:  `r round(min(st_length(sf)), 2)`
-- Average distance: `r round(mean(st_length(sf)))`
+  
+- **Max distance:** `r round(max(st_length(sf)))`
+  
+- **Min distance:**  `r round(min(st_length(sf)), 2)`
+  
+- **Average distance:** `r round(mean(st_length(sf)))`
 
 # Map
 
@@ -330,15 +333,15 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 
 ```
 
-![Animation](images/output.gif){width=350px}
-  
-This still ends up looking like a blob of colour...
+<img alt="Trips Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/output.gif?raw=true" width="350" align="center"/>
+
+- This still ends up looking like a blob of colour...
 
 # Routes
 
 Let's take the start and end point of the trip and use a route planning engine to provide a line. This route plan uses the cycle network, avoiding busy roads. 
 
-NOTE: This requires using [Open Source Routing Machine](http://project-osrm.org/) (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and installed add to OSRM.
+NOTE: This requires having [Open Source Routing Machine](http://project-osrm.org/) (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and add to OSRM.
 
 ```{r, eval=FALSE, echo=TRUE}
 # loop through sf and find a route from osrm...
@@ -363,7 +366,7 @@ purrr::map_df(split(trips, trips$id), function(trip) {
 
 ## Animate Routes
 
-This section requires [ffmpeg](https://ffmpeg.org/) system library to be installed give fine control to generating gif and mpegs videos. 
+This section requires [ffmpeg](https://ffmpeg.org/) system library to be installed to give fine control to generating gif and mpegs videos. 
 
 ```{r, eval=FALSE, echo=TRUE}
 routes <- st_read("trips.geojson")
@@ -437,4 +440,4 @@ map(plots[1:715], function(plot) {
 
 The resulting animations shows the shortest routes cyclists may use to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
 
-![Routes Animation](images/routes.gif){width=350px}
+<img alt="Routes Animation" href="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/routes.gif?raw=true" width="350" align="center"/>
