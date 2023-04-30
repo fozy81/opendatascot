@@ -20,6 +20,7 @@ Imports:
   tibble,
   tidyr
 Suggests: 
+    av,
     covr,
     data.table,
     gganimate,
