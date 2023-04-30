@@ -45,7 +45,7 @@ library(gganimate)
 library(transformr)
 ```
 
-### Download Meta-data
+# Meta-data
 
 Search [opendata.scot](opendata.scot) for meta-data about Glasgow Next Bike Cycle Hire trips, this describes the data and who provides it. Also we can confirm which open data licence is being used.
 
@@ -55,7 +55,7 @@ metadata <- search_ods(search = "Next Bike Cycle Hire - Glasgow")
 metadata$licence
 ```
 
-### Download
+# Download
 
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
@@ -73,7 +73,7 @@ trips <- get_ods(metadata)
 trips <- trips[[1]]
 ```
 
-### Summary
+# Stats
 
 Here we'll get some summary stats to help us understand the data.
 
@@ -105,7 +105,7 @@ trips %>%
   kable(., format = "simple", align = "c")
 ```
 
-### Average start time over 24hrs
+## Start Time
 
 Below is a plot of trip start times over 24hrs. Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at 4am.
 
@@ -121,7 +121,7 @@ hour_plot <- trips %>%
 hour_plot
 ```
 
-### Annual monthly usage
+## Annual monthly usage
 
 We can see significant usage in winter but almost a doubling of usage in summer months. Although, usage in 2022 looks a little unusual.
 
@@ -138,7 +138,7 @@ month_plot <- trips %>%
 month_plot
 ```
 
-### Map trip start points
+## Map trip start points
 
 Here we plot the start location using background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright). We can see bike hire trips being used widely across the city. There's some strange lat/lon start points which need to be filtered out. Not sure what explains these but filter to a bounding box around Glasgow helps.
 
@@ -154,7 +154,7 @@ trips <- trips %>%
     `START LONG` > -4.4)
 ```
 
-#### Map
+### Map
 
 ```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
 # Convert data frame into 'sf' geospatial dataframe
@@ -233,7 +233,7 @@ trips <- rename(trips,
 trips$id <- 1:nrow(trips)
 ```
 
-#### Stats:
+## Distance
 
 ```{r trip-stats, echo=TRUE}
 data <- trips
@@ -274,7 +274,7 @@ Summarize the average 'as the crow flies' trip distances:
 - Min distance:  `r round(min(st_length(sf)), 2)`
 - Average distance: `r round(mean(st_length(sf)))`
 
-#### Map
+# Map
 
 Here we plot all the trips as straight line. 
 
@@ -287,7 +287,7 @@ g <- ggplot() +
 g
 ```
 
-#### Animation 
+## Animation 
 
 Plotting all the lines at once blocks and covers many lines, so let's animate the trips as they are taken.
 
@@ -333,7 +333,7 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 ![Animation](images/output.gif){width=300}
 This still ends up looking like a blob of colour...
 
-## Routes
+# Routes
 
 Let's take the start and end point of the trip and use a route planning engine to provide a line. This route plan uses the cycle network, avoiding busy roads. 
 
