@@ -22,6 +22,7 @@ Imports:
 Suggests: 
     covr,
     data.table,
+    gganimate,
     ggmap,
     ggplot2,
     hexSticker,
@@ -33,7 +34,8 @@ Suggests:
     rmarkdown,
     sfheaders,
     testthat (>= 3.0.0),
-    tidyverse
+    tidyverse,
+    transformr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://fozy81.github.io/opendatascot/
