@@ -68,13 +68,17 @@ will be warned if data can’t be downloaded.
 To download data, you can either download the metadata using
 `ods_search()`, then pass that data frame to `ods_get()`
 
-    query <- ods_search("bins")
-    data <- ods_get(query)
+``` r
+query <- ods_search("Public Litter Bins")
+data <- ods_get(query)
+```
 
-Or use the search argument in `ods_get(search="my search term")` to
+Or use the search argument in `ods_get(search = "my search term")` to
 search and download matching datasets in one step.
 
-    data <- ods_get(search = "bins")
+``` r
+data <- ods_get(search = "Public Litter Bins")
+```
 
 By default, you will be asked if you want to save the data locally on
 the first download. Optionally, you can refresh the data or avoid being

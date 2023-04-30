@@ -67,26 +67,25 @@ warned if data can't be downloaded.
 To download data, you can either download the metadata using `ods_search()`,
 then pass that data frame to `ods_get()`
 
-```{r, echo=FALSE, message=FALSE}
-query <- ods_search("bins")
-data <- ods_get(query, ask = FALSE)
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+query <- ods_search("Public Litter Bins")
+data <- ods_get(query, ask = FALSE, refresh = TRUE)
 ```
 
-```
-query <- ods_search("bins")
+```r
+query <- ods_search("Public Litter Bins")
 data <- ods_get(query)
 ```
 
-Or use the search argument in `ods_get(search="my search term")` to search and
+Or use the search argument in `ods_get(search = "my search term")` to search and
 download matching datasets in one step.
 
-```{r, echo=FALSE, message=FALSE}
-data <- ods_get(search = "bins", ask = FALSE)
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data <- ods_get(search = "Public Litter Bins", ask = FALSE, refresh = TRUE)
 ```
 
-```
-data <- ods_get(search = "bins")
-
+```r
+data <- ods_get(search = "Public Litter Bins")
 ```
 
 By default, you will be asked if you want to save the data locally on the first
@@ -97,10 +96,11 @@ data.
 data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 data <- ods_get(search = c("Recycling Point Locations",
                            "Public Litter Bins"),
-                            ask = FALSE)
+                            ask = FALSE,
+                            refresh = TRUE)
 ```
 
 The `ods_get()` function returns a named list of data frames
