@@ -92,9 +92,10 @@ install these first.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dcooley.github.io/sfheaders/" class="external-link">sfheaders</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gganimate.com" class="external-link">gganimate</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasp85/transformr" class="external-link">transformr</a></span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="download-meta-data">Download Meta-data<a class="anchor" aria-label="anchor" href="#download-meta-data"></a>
-</h4>
+</div>
+<div class="section level2">
+<h2 id="meta-data">Meta-data<a class="anchor" aria-label="anchor" href="#meta-data"></a>
+</h2>
 <p>Search <a href="opendata.scot">opendata.scot</a> for meta-data about
 Glasgow Next Bike Cycle Hire trips, this describes the data and who
 provides it. Also we can confirm which open data licence is being
@@ -104,9 +105,9 @@ used.</p>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>licence</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> [<span class="dv">1</span>] <span class="st">"UK Open Government Licence v3.0"</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="download">Download<a class="anchor" aria-label="anchor" href="#download"></a>
-</h4>
+<div class="section level2">
+<h2 id="download">Download<a class="anchor" aria-label="anchor" href="#download"></a>
+</h2>
 <p>Using the meta-data, we can download the raw cycle trips data
 directly from the provider and save it to our computer for future (and
 quick) reference.</p>
@@ -115,9 +116,9 @@ quick) reference.</p>
 <span><span class="co"># list.</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre>
 </div>
-<div class="section level4">
-<h4 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
-</h4>
+<div class="section level2">
+<h2 id="stats">Stats<a class="anchor" aria-label="anchor" href="#stats"></a>
+</h2>
 <p>Here we’ll get some summary stats to help us understand the data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">median_duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">Duration</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span>, <span class="st">"mins"</span><span class="op">)</span></span></code></pre></div>
@@ -178,10 +179,9 @@ quick) reference.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section level4">
-<h4 id="average-start-time-over-24hrs">Average start time over 24hrs<a class="anchor" aria-label="anchor" href="#average-start-time-over-24hrs"></a>
-</h4>
+<div class="section level3">
+<h3 id="start-time">Start Time<a class="anchor" aria-label="anchor" href="#start-time"></a>
+</h3>
 <p>Below is a plot of trip start times over 24hrs. Looks as expected:
 Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at
 4am.</p>
@@ -197,9 +197,9 @@ Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at
 <span><span class="va">hour_plot</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/time-of-day-1.png" width="480"></p>
 </div>
-<div class="section level4">
-<h4 id="annual-monthly-usage">Annual monthly usage<a class="anchor" aria-label="anchor" href="#annual-monthly-usage"></a>
-</h4>
+<div class="section level3">
+<h3 id="annual-monthly-usage">Annual monthly usage<a class="anchor" aria-label="anchor" href="#annual-monthly-usage"></a>
+</h3>
 <p>We can see significant usage in winter but almost a doubling of usage
 in summer months. Although, usage in 2022 looks a little unusual.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -215,9 +215,9 @@ in summer months. Although, usage in 2022 looks a little unusual.</p>
 <span><span class="va">month_plot</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/monthly-usage-1.png" width="480"></p>
 </div>
-<div class="section level4">
-<h4 id="map-trip-start-points">Map trip start points<a class="anchor" aria-label="anchor" href="#map-trip-start-points"></a>
-</h4>
+<div class="section level3">
+<h3 id="map-trip-start-points">Map trip start points<a class="anchor" aria-label="anchor" href="#map-trip-start-points"></a>
+</h3>
 <p>Here we plot the start location using background map data from <a href="https://www.openstreetmap.org/copyright" class="external-link">OpenStreetMap</a>. We can
 see bike hire trips being used widely across the city. There’s some
 strange lat/lon start points which need to be filtered out. Not sure
@@ -233,9 +233,9 @@ helps.</p>
 <span>    <span class="va">`START LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.0</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span><span class="op">)</span></span></code></pre></div>
-<div class="section level5">
-<h5 id="map">Map<a class="anchor" aria-label="anchor" href="#map"></a>
-</h5>
+<div class="section level4">
+<h4 id="map">Map<a class="anchor" aria-label="anchor" href="#map"></a>
+</h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert data frame into 'sf' geospatial dataframe</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">trips</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"START LONG"</span>, <span class="st">"START LAT"</span><span class="op">)</span><span class="op">)</span></span>
@@ -312,9 +312,10 @@ outside Glasgow area - Remove trips with same start and end point</p>
 <span>  finish_lat <span class="op">=</span> <span class="va">`END LAT`</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span></span></code></pre></div>
-<div class="section level5">
-<h5 id="stats">Stats:<a class="anchor" aria-label="anchor" href="#stats"></a>
-</h5>
+</div>
+<div class="section level3">
+<h3 id="distance">Distance<a class="anchor" aria-label="anchor" href="#distance"></a>
+</h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">trips</span></span>
 <span><span class="co"># Use this to reduce data to make it run fast / less RAM needed</span></span>
@@ -350,9 +351,10 @@ outside Glasgow area - Remove trips with same start and end point</p>
 <p>Summarize the average ‘as the crow flies’ trip distances: - Max
 distance: 13719 - Min distance: 0.13 - Average distance: 1962</p>
 </div>
-<div class="section level5">
-<h5 id="map-1">Map<a class="anchor" aria-label="anchor" href="#map-1"></a>
-</h5>
+</div>
+<div class="section level2">
+<h2 id="map-1">Map<a class="anchor" aria-label="anchor" href="#map-1"></a>
+</h2>
 <p>Here we plot all the trips as straight line.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
@@ -362,10 +364,9 @@ distance: 13719 - Min distance: 0.13 - Average distance: 1962</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"All Trips"</span><span class="op">)</span></span>
 <span><span class="va">g</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/trip-map-1.png" width="480"></p>
-</div>
-<div class="section level5">
-<h5 id="animation">Animation<a class="anchor" aria-label="anchor" href="#animation"></a>
-</h5>
+<div class="section level3">
+<h3 id="animation">Animation<a class="anchor" aria-label="anchor" href="#animation"></a>
+</h3>
 <p>Plotting all the lines at once blocks and covers many lines, so let’s
 animate the trips as they are taken.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -404,13 +405,15 @@ animate the trips as they are taken.</p>
 <span><span class="op">}</span></span>
 <span><span class="va">video_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output.gif"</span><span class="op">)</span></span>
 <span><span class="fu">av</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/av/reference/capturing.html" class="external-link">av_capture_graphics</a></span><span class="op">(</span><span class="fu">make_plot</span><span class="op">(</span><span class="op">)</span>, <span class="va">video_file</span>, <span class="fl">512</span> , <span class="fl">480</span>, vfilter <span class="op">=</span> <span class="st">"framerate=fps=4"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="images/output.gif" width="300" alt="Animation"> This
-still ends up looking like a blob of colour…</p>
+<div class="figure">
+<img src="images/output.gif" width="350" alt=""><p class="caption">Animation</p>
+</div>
+<p>This still ends up looking like a blob of colour…</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="routes">Routes<a class="anchor" aria-label="anchor" href="#routes"></a>
-</h3>
+<div class="section level2">
+<h2 id="routes">Routes<a class="anchor" aria-label="anchor" href="#routes"></a>
+</h2>
 <p>Let’s take the start and end point of the trip and use a route
 planning engine to provide a line. This route plan uses the cycle
 network, avoiding busy roads.</p>
@@ -437,7 +440,6 @@ Scotland needs to be downloaded and installed add to OSRM.</p>
 <span>  <span class="va">geo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="va">json_route</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_write.html" class="external-link">st_write</a></span><span class="op">(</span><span class="va">geo</span>, <span class="st">"trips.geojson"</span>, append <span class="op">=</span> <span class="cn">TRUE</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-</div>
 <div class="section level3">
 <h3 id="animate-routes">Animate Routes<a class="anchor" aria-label="anchor" href="#animate-routes"></a>
 </h3>
@@ -516,7 +518,7 @@ to travel A to B using the cycle network. Of course, people hiring bikes
 may have chosen a different route but it gives some idea how the
 transport network in Glasgow looks those hiring bikes.</p>
 <div class="figure">
-<img src="images/routes.gif" width="300" alt=""><p class="caption">Routes Animation</p>
+<img src="images/routes.gif" width="350" alt=""><p class="caption">Routes Animation</p>
 </div>
 </div>
 </div>
