@@ -116,21 +116,23 @@ recycling_points <- data[[1]]
 ```
 
 Geojson datasets are automating converted to [simple
-feature](https://r-spatial.github.io/sf/) ‘sf’ data. As we can see in
-the example the data frame is classed as “sf” which mean spatial /
-geometry coordinates are held in a `geometry` column.
+feature](https://r-spatial.github.io/sf/) ‘sf’ data. This helps make
+geospatial data easier to handle in R. As we can see in this example the
+data frame is classed as “sf” which means spatial / geometry coordinates
+are held in a `geometry` column.
 
 ``` r
 class(recycling_points) 
 #> [1] "sf"         "data.frame"
 ```
 
-These allows the `plot()` function to automatically plot the coordinates
+This allows the `plot()` function to automatically plot the coordinates
 in the geometry column.
 
 ``` r
-plot(recycling_points$geometry, 
-     col = as.factor(recycling_points$LOCATION))
+plot(recycling_points)
+#> Warning: plotting the first 10 out of 14 attributes; use max.plot = 14 to plot
+#> all
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
