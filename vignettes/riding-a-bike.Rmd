@@ -59,7 +59,7 @@ metadata$licence
 
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
-```{r download, echo=FALSE, message=FALSE}
+```{r download, echo=FALSE, message=FALSE, warning=FALSE}
 trips <- get_ods(metadata, ask = FALSE)
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
@@ -112,14 +112,12 @@ Below is a plot of trip start times over 24hrs. Looks as expected: Peaks in morn
 ```{r time-of-day, echo = TRUE, warning=FALSE, message=FALSE}
 # Start time of day (hour)
 trips$hour <- hour(trips$`Start time`)
-
 # ggplot bar chart
 hour_plot <- trips %>%
   ggplot(aes(x = hour)) +
   geom_bar(aes(fill = ..count..)) +
   scale_fill_gradient(low = "pink", high = "blue") +
   theme_minimal()
-
 hour_plot
 ```
 
@@ -132,13 +130,11 @@ We can see significant usage in winter but almost a doubling of usage in summer 
 trips$year <- as.character(year(trips$`Start time`))
 # Extract month as abbreviated 'Aug'...
 trips$month <- lubridate::month(trips$`Start time`, abbr = TRUE, label = TRUE)
-
 # Plot bar chart
 month_plot <- trips %>%
   ggplot(aes(x = month)) +
   geom_bar(aes(fill = year)) +
   theme_minimal()
-
 month_plot
 ```
 
@@ -163,8 +159,6 @@ trips <- trips %>%
 ```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
-# trips <- select(trips, year)
-# trips <- as.numeric(trips$year)
 
 # Bounding box for background map
 bbox <- map_dbl(st_bbox(trips), 1)
@@ -190,13 +184,17 @@ cycle_map <- map + geom_point(
     axis.title = element_blank(),
     axis.text = element_blank()
   ) + facet_wrap(vars(year))
-
-
 cycle_map
 ```
 
-## Start and End trip line
+## Start and End Trips
 
+Let's explore trips that start and finish at a different location. This may give
+some insight into the lengths of journeys taken. We ignore trips that started
+and ended in the same place, as we can't tell how far or where they went.
+- Remove points with missing data
+- Remove points outside Glasgow area
+- Remove trips with same start and end point
 
 ```{r start-end-points, echo=TRUE}
 trips <- get_ods(metadata)
@@ -216,7 +214,6 @@ trips <- trips %>%
     `END LONG` > -4.4 &
     `END LONG` != `START LONG` &
     `END LAT` != `START LAT`)
-
 trips <- arrange(trips, `Start time`)
 trips$week <- week(trips$`Start time`)
 trips$month <- month(trips$`Start time`)
@@ -233,7 +230,6 @@ trips <- rename(trips,
   finish_long = `END LONG`,
   finish_lat = `END LAT`
 )
-
 trips$id <- 1:nrow(trips)
 ```
 
@@ -245,17 +241,23 @@ data <- trips
 # data <- data %>% filter(year_month < 201711)
 setDT(data)
 data[, line_id := .I] ## Each row is a line
-
 ## create a long-form of the data
 dt_line <- rbindlist(
   list(
-    data[, .(arrival_month, year_month, line_id, lon = start_long, lat = start_lat, sequence = 1)],
-    data[, .(arrival_month, year_month, line_id, lon = finish_long, lat = finish_lat, sequence = 2)]
+    data[, .(arrival_month, 
+             year_month,
+             line_id, 
+             lon = start_long,
+             lat = start_lat, sequence = 1)],
+    data[, .(arrival_month,
+             year_month, 
+             line_id,
+             lon = finish_long,
+             lat = finish_lat,
+             sequence = 2)]
   )
 )
-
 setorder(dt_line, line_id, sequence)
-
 sf <- sfheaders::sf_multilinestring(
   obj = dt_line,
   x = "lon",
@@ -264,24 +266,17 @@ sf <- sfheaders::sf_multilinestring(
   linestring_id = "line_id",
   keep = T
 )
-
 sf::st_crs(sf) <- 4326 ## Assume it's in Web Mercator
-
-print(paste0(
-  "Max distance: ",
-  round(max(st_length(sf)))
-))
-print(paste0(
-  "Min distance: ",
-  round(min(st_length(sf)), 2)
-))
-print(paste0(
-  "Average distance: ",
-  round(mean(st_length(sf)))
-))
 ```
 
+Summarize the average 'as the crow flies' trip distances:
+- Max distance: `r round(max(st_length(sf)))`
+- Min distance:  `r round(min(st_length(sf)), 2)`
+- Average distance: `r round(mean(st_length(sf)))`
+
 #### Map
+
+Here we plot all the trips as straight line. 
 
 ```{r trip-map, echo=TRUE, cache=TRUE}
 #
@@ -293,6 +288,8 @@ g
 ```
 
 #### Animation 
+
+Plotting all the lines at once blocks and covers many lines, so let's animate the trips as they are taken.
 
 ```{r, eval=FALSE, echo=TRUE}
 steps <- seq(from = 1000, to = 664586, by = floor(nrow(sf) / 10))
@@ -334,12 +331,13 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 ```
 
 ![Animation](images/output.gif){width=50%}
+This still ends up looking like a blob of colour...
 
 ## Routes
 
-Map route for each trip using cycle/road network.
+Let's take the start and end point of the trip and use a route planning engine to provide a line. This route plan uses the cycle network, avoiding busy roads. 
 
-NOTE: This requires using Open Source Routing (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and installed into OSRM.
+NOTE: This requires using [Open Source Routing Machine](http://project-osrm.org/) (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and installed add to OSRM.
 
 ```{r, eval=FALSE, echo=TRUE}
 # loop through sf and find a route from osrm...
@@ -364,7 +362,7 @@ purrr::map_df(split(trips, trips$id), function(trip) {
 
 ## Animate Routes
 
-This section requires ffmpeg to give fine control to generating gif and mpegs videos. 
+This section requires ffmpeg system library ti be installed give fine control to generating gif and mpegs videos. 
 
 ```{r, eval=FALSE, echo=TRUE}
 routes <- st_read("trips.geojson")
@@ -435,5 +433,7 @@ map(plots[1:715], function(plot) {
 # ffmpeg -f image2 -framerate 15 -i 'routes/%d.png' -vcodec libx264 -crf 22 video.mp4
 
 ```
+
+The resulting animations shows the shortest routes cyclists may have used to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
 
 ![Routes Animation](images/routes.gif){width=50%}
