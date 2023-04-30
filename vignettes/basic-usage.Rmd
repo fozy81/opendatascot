@@ -76,11 +76,11 @@ data <- get_ods(query)
 to search and download any matching datasets in one step.
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "Grit bins", ask = FALSE)
+data <- get_ods(search = "bins", ask = FALSE)
 ```
 
 ``` {r
-data <- get_ods(search = "Grit bins")
+data <- get_ods(search = "bins")
 ```
 
 By default, you will be asked if you want to save the data locally on
