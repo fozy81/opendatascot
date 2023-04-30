@@ -9,6 +9,7 @@
 #' @return dataframe of metadata for available datasets (matching search term if
 #'   provided).
 #' @export
+#' @importFrom dplyr filter
 #' @importFrom rlang .data
 #' @importFrom purrr map_dfr
 #' @importFrom tibble as_tibble
@@ -21,6 +22,7 @@ search_ods <- function(search = "") {
   datasets <- jsonlite::fromJSON("https://opendata.scot/datasets.json",
     flatten = TRUE
   )
+  datasets <- filter(datasets, licence != "No licence")
   search_dfr <- map_dfr(search, function(search) {
     datasets <- datasets[grep(tolower(search), tolower(datasets$title)), ]
 
