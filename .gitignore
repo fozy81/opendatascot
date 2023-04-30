@@ -5,6 +5,7 @@
 doc
 docs
 inst/doc
-vignettes/images
 vignettes/in-progess
 vignettes/riding-a-bike_cache
+scotland-latest.osm.pbf
+trips.geojson

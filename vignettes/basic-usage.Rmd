@@ -61,7 +61,7 @@ To download data, you can either download the metadata using
 `search_ods()`, then pass that data frame to `get_ods()`
 
 ```{r}
-query <- search_ods("Grit bins")
+query <- search_ods("bins")
 ```
 
 ```{r, echo=FALSE, message=FALSE}
@@ -97,25 +97,25 @@ Once you have downloaded the dataset(s), you may wish to plot or map the
 data. Here's a short example of how plotting can be done.
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "Air Quality - Diffusion Tubes", ask = FALSE)
+data <- get_ods(search = "Recycling Point Locations", ask = FALSE)
 ```
 
 ``` r
-data <- get_ods(search = "Air Quality - Diffusion Tubes")
+data <- get_ods(search = "Recycling Point Locations")
 ```
 
 The `get_ods()` function returned a named list of data frames - lets
 select the one we want by name:
 
 ```{r}
-air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+recycling_points <- data$Recycling_Point_Locations_Dundee_City_Council
 ```
 
 Or alternatively select the first data frame in the list using index of
 1.
 
 ```{r}
-air_tubes <- data[[1]]
+recycling_points <- data[[1]]
 ```
 
 Geojson datasets are automating converted to [simple
@@ -124,7 +124,7 @@ the example the data frame is classed as "sf" which means spatial /
 geometry attributes are baked in.
 
 ```{r}
-class(air_tubes) 
+class(recycling_points) 
 ```
 
 You can see a `geometry` variable which contains the spatial
@@ -132,7 +132,7 @@ co-ordinates. This allows the `plot()` function to automatically plot
 the coordinates.
 
 ```{r}
-plot(air_tubes$geometry, col = as.factor(air_tubes$LOCATION))
+plot(recycling_points$geometry, col = as.factor(recycling_points$LOCATION))
 ```
 
 ## JSON

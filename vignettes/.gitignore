@@ -1,2 +1,5 @@
 *.html
 *.R
+vignettes/images
+vignettes/in-progess
+vignettes/riding-a-bike_cache

@@ -329,11 +329,11 @@ make_plot <- function() {
   })
 }
 video_file <- file.path(tempdir(), "output.gif")
-av::av_capture_graphics(make_plot(), video_file, 1280, 720, res = 144, vfilter = "framerate=fps=5")
+av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate=fps=4")
 
 ```
 
-![Animation](/home/tim/Documents/Projects/opendatascot/vignettes/images/output.gif){width=50%}
+![Animation](images/output.gif){width=50%}
 
 ## Routes
 
@@ -431,9 +431,9 @@ map(plots[1:715], function(plot) {
 })
 
 # Use ffmpeg system / command line library:
-# ffmpeg -i video.mp4 -r 12 -s 320x180 output.gif
+# ffmpeg -i video.mp4 -r 4 -s 512x420 output.gif
 # ffmpeg -f image2 -framerate 15 -i 'routes/%d.png' -vcodec libx264 -crf 22 video.mp4
 
 ```
 
-![Routes Animation](/home/tim/Documents/Projects/opendatascot/vignettes/in-progress/video-2.mp4){width=50%}
+![Routes Animation](images/routes.gif){width=50%}
