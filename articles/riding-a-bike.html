@@ -110,10 +110,6 @@ used.</p>
 <p>Using the meta-data, we can download the raw cycle trips data
 directly from the provider and save it to our computer for future (and
 quick) reference.</p>
-<pre><code><span><span class="co">#&gt; Warning: One or more parsing issues, call `problems()` on your data frame for details,</span></span>
-<span><span class="co">#&gt; e.g.:</span></span>
-<span><span class="co">#&gt;   dat &lt;- vroom(...)</span></span>
-<span><span class="co">#&gt;   problems(dat)</span></span></code></pre>
 <pre class="{r"><code><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ods.html">get_ods</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co"># Data is returned as a list of data frames, extract first data frame in the</span></span>
 <span><span class="co"># list.</span></span>
@@ -123,11 +119,11 @@ quick) reference.</p>
 <h4 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h4>
 <p>Here we’ll get some summary stats to help us understand the data.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">median_duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">Duration</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span>, <span class="st">"mins"</span><span class="op">)</span></span></code></pre></div>
 <p>Median trip duration is around: <code>14 mins</code></p>
 <p>Top 3 start locations:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">`Rental place`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -155,7 +151,7 @@ quick) reference.</p>
 </tbody>
 </table>
 <p>Top 3 return locations:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">`Return place`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -189,17 +185,15 @@ quick) reference.</p>
 <p>Below is a plot of trip start times over 24hrs. Looks as expected:
 Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at
 4am.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Start time of day (hour)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># ggplot bar chart</span></span>
 <span><span class="va">hour_plot</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hour</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">..count..</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"pink"</span>, high <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">hour_plot</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/time-of-day-1.png" width="480"></p>
 </div>
@@ -208,18 +202,16 @@ Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at
 </h4>
 <p>We can see significant usage in winter but almost a doubling of usage
 in summer months. Although, usage in 2022 looks a little unusual.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract year (as character to help plot as discrete categories in chart)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">year</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Extract month as abbreviated 'Aug'...</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">month</span> <span class="op">&lt;-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span>, abbr <span class="op">=</span> <span class="cn">TRUE</span>, label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Plot bar chart</span></span>
 <span><span class="va">month_plot</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">month</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">month_plot</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/monthly-usage-1.png" width="480"></p>
 </div>
@@ -231,7 +223,7 @@ see bike hire trips being used widely across the city. There’s some
 strange lat/lon start points which need to be filtered out. Not sure
 what explains these but filter to a bounding box around Glasgow
 helps.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Clean out weird points:</span></span>
 <span><span class="co"># hist(trips$`START LAT`)</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -244,11 +236,9 @@ helps.</p>
 <div class="section level5">
 <h5 id="map">Map<a class="anchor" aria-label="anchor" href="#map"></a>
 </h5>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert data frame into 'sf' geospatial dataframe</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">trips</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"START LONG"</span>, <span class="st">"START LAT"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># trips &lt;- select(trips, year)</span></span>
-<span><span class="co"># trips &lt;- as.numeric(trips$year)</span></span>
 <span></span>
 <span><span class="co"># Bounding box for background map</span></span>
 <span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -274,16 +264,19 @@ helps.</p>
 <span>    axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
 <span><span class="va">cycle_map</span></span></code></pre></div>
 <p><img src="riding-a-bike_files/figure-html/map-stat-point-1.png" width="480"></p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="start-and-end-trip-line">Start and End trip line<a class="anchor" aria-label="anchor" href="#start-and-end-trip-line"></a>
+<h3 id="start-and-end-trips">Start and End Trips<a class="anchor" aria-label="anchor" href="#start-and-end-trips"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>Let’s explore trips that start and finish at a different location.
+This may give some insight into the lengths of journeys taken. We ignore
+trips that started and ended in the same place, as we can’t tell how far
+or where they went. - Remove points with missing data - Remove points
+outside Glasgow area - Remove trips with same start and end point</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ods.html">get_ods</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2022)' dataset was last downloaded on 2023-04-30</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -302,7 +295,6 @@ helps.</p>
 <span>    <span class="va">`END LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`END LONG`</span> <span class="op">!=</span> <span class="va">`START LONG`</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`END LAT`</span> <span class="op">!=</span> <span class="va">`START LAT`</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">trips</span>, <span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">week</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
@@ -319,28 +311,33 @@ helps.</p>
 <span>  finish_long <span class="op">=</span> <span class="va">`END LONG`</span>,</span>
 <span>  finish_lat <span class="op">=</span> <span class="va">`END LAT`</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
 <h5 id="stats">Stats:<a class="anchor" aria-label="anchor" href="#stats"></a>
 </h5>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">trips</span></span>
 <span><span class="co"># Use this to reduce data to make it run fast / less RAM needed</span></span>
 <span><span class="co"># data &lt;- data %&gt;% filter(year_month &lt; 201711)</span></span>
 <span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">data</span><span class="op">[</span>, <span class="va">line_id</span> <span class="op">:=</span> <span class="va">.I</span><span class="op">]</span> <span class="co">## Each row is a line</span></span>
-<span></span>
 <span><span class="co">## create a long-form of the data</span></span>
 <span><span class="va">dt_line</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    <span class="va">data</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">arrival_month</span>, <span class="va">year_month</span>, <span class="va">line_id</span>, lon <span class="op">=</span> <span class="va">start_long</span>, lat <span class="op">=</span> <span class="va">start_lat</span>, sequence <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>    <span class="va">data</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">arrival_month</span>, <span class="va">year_month</span>, <span class="va">line_id</span>, lon <span class="op">=</span> <span class="va">finish_long</span>, lat <span class="op">=</span> <span class="va">finish_lat</span>, sequence <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span></span>
+<span>    <span class="va">data</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">arrival_month</span>, </span>
+<span>             <span class="va">year_month</span>,</span>
+<span>             <span class="va">line_id</span>, </span>
+<span>             lon <span class="op">=</span> <span class="va">start_long</span>,</span>
+<span>             lat <span class="op">=</span> <span class="va">start_lat</span>, sequence <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>    <span class="va">data</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">arrival_month</span>,</span>
+<span>             <span class="va">year_month</span>, </span>
+<span>             <span class="va">line_id</span>,</span>
+<span>             lon <span class="op">=</span> <span class="va">finish_long</span>,</span>
+<span>             lat <span class="op">=</span> <span class="va">finish_lat</span>,</span>
+<span>             sequence <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">setorder</a></span><span class="op">(</span><span class="va">dt_line</span>, <span class="va">line_id</span>, <span class="va">sequence</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sf</span> <span class="op">&lt;-</span> <span class="fu">sfheaders</span><span class="fu">::</span><span class="fu"><a href="https://dcooley.github.io/sfheaders/reference/sf_multilinestring.html" class="external-link">sf_multilinestring</a></span><span class="op">(</span></span>
 <span>  obj <span class="op">=</span> <span class="va">dt_line</span>,</span>
 <span>  x <span class="op">=</span> <span class="st">"lon"</span>,</span>
@@ -349,29 +346,15 @@ helps.</p>
 <span>  linestring_id <span class="op">=</span> <span class="st">"line_id"</span>,</span>
 <span>  keep <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span> <span class="co">## Assume it's in Web Mercator</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Max distance: "</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_length</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Max distance: 13719"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Min distance: "</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_length</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Min distance: 0.13"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Average distance: "</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_length</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Average distance: 1962"</span></span></code></pre></div>
+<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span> <span class="co">## Assume it's in Web Mercator</span></span></code></pre></div>
+<p>Summarize the average ‘as the crow flies’ trip distances: - Max
+distance: 13719 - Min distance: 0.13 - Average distance: 1962</p>
 </div>
 <div class="section level5">
 <h5 id="map-1">Map<a class="anchor" aria-label="anchor" href="#map-1"></a>
 </h5>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>Here we plot all the trips as straight line.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sf</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">year_month</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
@@ -383,7 +366,9 @@ helps.</p>
 <div class="section level5">
 <h5 id="animation">Animation<a class="anchor" aria-label="anchor" href="#animation"></a>
 </h5>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>Plotting all the lines at once blocks and covers many lines, so let’s
+animate the trips as they are taken.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">steps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1000</span>, to <span class="op">=</span> <span class="fl">664586</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">/</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sf</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">year</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">steps</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">steps</span><span class="op">)</span></span>
@@ -419,20 +404,21 @@ helps.</p>
 <span><span class="op">}</span></span>
 <span><span class="va">video_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output.gif"</span><span class="op">)</span></span>
 <span><span class="fu">av</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/av/reference/capturing.html" class="external-link">av_capture_graphics</a></span><span class="op">(</span><span class="fu">make_plot</span><span class="op">(</span><span class="op">)</span>, <span class="va">video_file</span>, <span class="fl">512</span> , <span class="fl">480</span>, vfilter <span class="op">=</span> <span class="st">"framerate=fps=4"</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="images/output.gif" style="width:50.0%" alt=""><p class="caption">Animation</p>
-</div>
+<p><img src="images/output.gif" style="width:50.0%" alt="Animation">
+This still ends up looking like a blob of colour…</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="routes">Routes<a class="anchor" aria-label="anchor" href="#routes"></a>
 </h3>
-<p>Map route for each trip using cycle/road network.</p>
-<p>NOTE: This requires using Open Source Routing (OSRM) library to be
-installed locally. Please follow link and install. Additionally, the
-OpenStreetMap data for Scotland needs to be downloaded and installed
-into OSRM.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Let’s take the start and end point of the trip and use a route
+planning engine to provide a line. This route plan uses the cycle
+network, avoiding busy roads.</p>
+<p>NOTE: This requires using <a href="http://project-osrm.org/" class="external-link">Open
+Source Routing Machine</a> (OSRM) library to be installed locally.
+Please follow link and install. Additionally, the OpenStreetMap data for
+Scotland needs to be downloaded and installed add to OSRM.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># loop through sf and find a route from osrm...</span></span>
 <span><span class="va">steps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1000</span>, to <span class="op">=</span> <span class="fl">664586</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span> <span class="op">/</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -455,9 +441,9 @@ into OSRM.</p>
 <div class="section level3">
 <h3 id="animate-routes">Animate Routes<a class="anchor" aria-label="anchor" href="#animate-routes"></a>
 </h3>
-<p>This section requires ffmpeg to give fine control to generating gif
-and mpegs videos.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>This section requires ffmpeg system library ti be installed give fine
+control to generating gif and mpegs videos.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">routes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="st">"trips.geojson"</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">day</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/day.html" class="external-link">day</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">day</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_pad.html" class="external-link">str_pad</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">day</span>, pad <span class="op">=</span> <span class="fl">0</span>, width <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -524,6 +510,10 @@ and mpegs videos.</p>
 <span><span class="co"># Use ffmpeg system / command line library:</span></span>
 <span><span class="co"># ffmpeg -i video.mp4 -r 4 -s 512x420 output.gif</span></span>
 <span><span class="co"># ffmpeg -f image2 -framerate 15 -i 'routes/%d.png' -vcodec libx264 -crf 22 video.mp4</span></span></code></pre></div>
+<p>The resulting animations shows the shortest routes cyclists may have
+used to travel A to B using the cycle network. Of course, people hiring
+bikes may have chosen a different route but it gives some idea how the
+transport network in Glasgow looks those hiring bikes.</p>
 <div class="figure">
 <img src="images/routes.gif" style="width:50.0%" alt=""><p class="caption">Routes Animation</p>
 </div>
