@@ -330,7 +330,7 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 
 ```
 
-![Animation](images/output.gif){width=50%}
+![Animation](images/output.gif){width=300}
 This still ends up looking like a blob of colour...
 
 ## Routes
@@ -362,7 +362,7 @@ purrr::map_df(split(trips, trips$id), function(trip) {
 
 ## Animate Routes
 
-This section requires ffmpeg system library ti be installed give fine control to generating gif and mpegs videos. 
+This section requires [ffmpeg](https://ffmpeg.org/) system library to be installed give fine control to generating gif and mpegs videos. 
 
 ```{r, eval=FALSE, echo=TRUE}
 routes <- st_read("trips.geojson")
@@ -434,6 +434,6 @@ map(plots[1:715], function(plot) {
 
 ```
 
-The resulting animations shows the shortest routes cyclists may have used to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
+The resulting animations shows the shortest routes cyclists may use to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
 
-![Routes Animation](images/routes.gif){width=50%}
+![Routes Animation](images/routes.gif){width=300}
