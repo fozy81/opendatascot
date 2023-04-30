@@ -1,25 +1,28 @@
 ---
 title: "Riding a Bike"
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
-```{r, include = FALSE}
+```{r defaults, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width = 6.5,
-  fig.height = 5,
+  fig.width = 5,
+  fig.height = 4,
   echo = FALSE
 )
 ```
 
+# Setup
+
 Let's take a look at the Glasgow bike hire trip data. Firstly, load all the libraries we'll need for the analysis. Note, you may need to install these first.
 
-```{r setup, echo=TRUE, message=FALSE}
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 # install.packages("devtools")
 # devtools::install_github("fozy81/opendatascot")
 library(opendatascotland)
+library(av)
 library(sf)
 library(tidyverse)
 library(ggmap)
@@ -36,7 +39,7 @@ library(transformr)
 
 Search [opendata.scot](opendata.scot) for meta-data about Glasgow Next Bike Cycle Hire trips, this describes the data and who provides it. Also we can confirm which open data licence is being used.
 
-```{r, echo = TRUE, comment=">>"}
+```{r metadata, echo = TRUE, comment=">>"}
 # Search and download
 metadata <- search_ods(search = "Next Bike Cycle Hire - Glasgow")
 metadata$licence
@@ -46,7 +49,7 @@ metadata$licence
 
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
-```{r, echo=FALSE, message=FALSE}
+```{r download, echo=FALSE, message=FALSE}
 trips <- get_ods(metadata, ask = FALSE)
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
@@ -64,7 +67,7 @@ trips <- trips[[1]]
 
 Here we'll get some summary stats to help us understand the data.
 
-```{r, echo = TRUE}
+```{r summary, echo = TRUE}
 median_duration <- paste(round(median(trips$Duration) / 60), "mins")
 ```
 
@@ -72,31 +75,31 @@ Median trip duration is around: `` `r median_duration` ``
 
 Top 3 start locations:
 
-```{r, echo = TRUE}
+```{r median, echo = TRUE, fig.width = 3, render="asis" }
 trips %>%
   group_by(`Rental place`) %>%
   summarise(count = n()) %>%
   arrange(-count) %>%
   head(3) %>%
-  kable()
+  kable(., format = "simple", align = "c")
 ```
 
 Top 3 return locations:
 
-```{r, echo = TRUE}
+```{r return-locations, echo = TRUE, render="asis"}
 trips %>%
   group_by(`Return place`) %>%
   summarise(count = n()) %>%
   arrange(-count) %>%
   head(3) %>%
-  kable()
+  kable(., format = "simple", align = "c")
 ```
 
 ### Average start time over 24hrs
 
 Below is a plot of trip start times over 24hrs. Looks as expected: Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at 4am.
 
-```{r, echo = TRUE, warning=FALSE, message=FALSE}
+```{r time-of-day, echo = TRUE, warning=FALSE, message=FALSE}
 # Start time of day (hour)
 trips$hour <- hour(trips$`Start time`)
 
@@ -114,7 +117,7 @@ hour_plot
 
 We can see significant usage in winter but almost a doubling of usage in summer months. Although, usage in 2022 looks a little unusual.
 
-```{r,  echo = TRUE, warning=FALSE, message=FALSE}
+```{r monthly-usage,  echo = TRUE, warning=FALSE, message=FALSE}
 # Extract year (as character to help plot as discrete categories in chart)
 trips$year <- as.character(year(trips$`Start time`))
 # Extract month as abbreviated 'Aug'...
@@ -133,7 +136,7 @@ month_plot
 
 Here we plot the start location using background map data from [OpenStreetMap](https://www.openstreetmap.org/copyright). We can see bike hire trips being used widely across the city. There's some strange lat/lon start points which need to be filtered out. Not sure what explains these but filter to a bounding box around Glasgow helps.
 
-```{r, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE}
+```{r start-points, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE}
 # Clean out weird points:
 # hist(trips$`START LAT`)
 trips <- trips %>%
@@ -145,7 +148,9 @@ trips <- trips %>%
     `START LONG` > -4.4)
 ```
 
-```{r}
+#### Map
+
+```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 # trips <- select(trips, year)
@@ -181,7 +186,9 @@ cycle_map
 ```
 
 ## Start and End trip line
-```{r, lines}
+
+
+```{r start-end-points, echo=TRUE}
 trips <- get_ods(metadata)
 trips <- trips[[1]]
 trips <- trips %>%
@@ -200,18 +207,14 @@ trips <- trips %>%
     `END LONG` != `START LONG` &
     `END LAT` != `START LAT`)
 
-
 trips <- arrange(trips, `Start time`)
 trips$week <- week(trips$`Start time`)
-trips$month <-  month(trips$`Start time`)
-trips$year <-  year(trips$`Start time`)
-trips$month  <- str_pad(trips$month, pad = 0, width = 2)
-trips$week  <- str_pad(trips$week, pad = 0, width = 2)
+trips$month <- month(trips$`Start time`)
+trips$year <- year(trips$`Start time`)
+trips$month <- str_pad(trips$month, pad = 0, width = 2)
+trips$week <- str_pad(trips$week, pad = 0, width = 2)
 trips$year_month <- as.integer(paste0(trips$year, trips$month))
-trips$year_week <- as.integer(paste0(trips$year, trips$week ))
-
-
-
+trips$year_week <- as.integer(paste0(trips$year, trips$week))
 trips <- mutate(trips, arrival_month = 1:nrow(trips))
 # trips$arrival_month <- trips$time
 trips <- rename(trips,
@@ -221,16 +224,23 @@ trips <- rename(trips,
   finish_lat = `END LAT`
 )
 
-data <- trips
+trips$id <- 1:nrow(trips)
+```
 
+#### Stats:
+
+```{r trip-stats, echo=TRUE}
+data <- trips
+# Use this to reduce data to make it run fast / less RAM needed
+# data <- data %>% filter(year_month < 201711)
 setDT(data)
 data[, line_id := .I] ## Each row is a line
 
 ## create a long-form of the data
 dt_line <- rbindlist(
   list(
-    data[, .(arrival_month, line_id, lon = start_long, lat = start_lat, sequence = 1)],
-    data[, .(arrival_month, line_id, lon = finish_long, lat = finish_lat, sequence = 2)] 
+    data[, .(arrival_month, year_month, line_id, lon = start_long, lat = start_lat, sequence = 1)],
+    data[, .(arrival_month, year_month, line_id, lon = finish_long, lat = finish_lat, sequence = 2)]
   )
 )
 
@@ -247,143 +257,174 @@ sf <- sfheaders::sf_multilinestring(
 
 sf::st_crs(sf) <- 4326 ## Assume it's in Web Mercator
 
-print(paste0("Max distance: ",
-             round(max(st_length(sf)))))
-print(paste0("Min distance: ",
-             round(min(st_length(sf)), 2)))
-print(paste0("Average distance: ", 
-             round(mean(st_length(sf)))))
+print(paste0(
+  "Max distance: ",
+  round(max(st_length(sf)))
+))
+print(paste0(
+  "Min distance: ",
+  round(min(st_length(sf)), 2)
+))
+print(paste0(
+  "Average distance: ",
+  round(mean(st_length(sf)))
+))
+```
 
+#### Map
 
+```{r trip-map, echo=TRUE, cache=TRUE}
+#
+g <- ggplot() +
+  geom_sf(data = sf, mapping = aes(colour = year_month), show.legend = FALSE) +
+  lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
+  labs(title = "All Trips")
+g
+```
 
-# 
-# g <- ggplot() +
-#   geom_sf(data = sf, mapping = aes(colour = arrival_month), show.legend = FALSE) +
-#   lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
-#   labs(title = 'Year-Month: {frame_time}')
-# 
-# g + transition_time(arrival_month) +
-#     shadow_mark(alpha = 0.3, size = 0.5) 
+#### Animation 
 
-# anim_save()
-
-steps <- seq(from = 1000, to = 664586, by = floor(nrow(sf) / 100))
+```{r, eval=FALSE, echo=TRUE}
+steps <- seq(from = 1000, to = 664586, by = floor(nrow(sf) / 10))
 sf$year <- year(trips$`Start time`)
 names(steps) <- 1:length(steps)
-save_images <- map(steps, function(step) {
-  n <- steps[steps == step]
-  data <- sf[1:step, ]
-  g <- ggplot() +
-  geom_sf(data = data, mapping = aes(colour = arrival_month, 
-                                     alpha = 0.9), 
-          show.legend = FALSE) +
-  lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
-    ggtitle(max(data$year)) +
-    theme_void() +
-      theme(plot.background = element_rect(fill = "black", color = "black"), 
-            plot.title = element_text(color="purple",
-                                      size=14, 
-                                      face="bold",
-                                      hjust = 0.5,
-                                      vjust = 0
-                                      )) +
-      scale_colour_gradient(low = "blue", high = "violet",trans = "reverse") 
-    
-  ggsave(paste0("images/", names(n), ".png"))
-})
-
-
-# ffmpeg -i video.mp4 -r 12 -s 320x180 output.gif
-# ffmpeg -f image2 -framerate 15 -i 'images/%d.png' -vcodec libx264 -crf 22 video.mp4
-# library(animation)
-# imgs <- list.files(path = "/home/pop/Documents/projects/opendatascot/vignettes/images" ,
-#                    pattern="*.png")
-# saveVideo({
-#   for(img in imgs){
-#     im <- magick::image_read( path = "/home/pop/Documents/projects/opendatascot/vignettes/images" ,
-#       img)
-#     plot(as.raster(im))
-#   }  
-# })
-
+make_plot <- function() {
+  map(steps, function(step) {
+    n <- steps[steps == step]
+    data <- sf[1:step, ]
+    g <- ggplot() +
+      geom_sf(
+        data = data, mapping = aes(
+          colour = arrival_month,
+          alpha = 0.9
+        ),
+        show.legend = FALSE
+      ) +
+      lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
+      ggtitle(max(data$year)) +
+      theme_void() +
+      theme(
+        plot.background = element_rect(fill = "black", color = "black"),
+        plot.title = element_text(
+          color = "purple",
+          size = 14,
+          face = "bold",
+          hjust = 0.5,
+          vjust = 0
+        )
+      ) +
+      scale_colour_gradient(low = "blue", high = "violet", trans = "reverse")
+    print(g)
+    # ggsave(paste0("vignettes/images/", names(n), ".png"))
+  })
+}
+video_file <- file.path(tempdir(), "output.gif")
+av::av_capture_graphics(make_plot(), video_file, 1280, 720, res = 144, vfilter = "framerate=fps=5")
 
 ```
 
+![Animation](/home/tim/Documents/Projects/opendatascot/vignettes/images/output.gif){width=50%}
 
 ## Routes
 
-```{r}
-# 
-# install.packages("geojsonsf")
-# library(geojsonsf)
+Map route for each trip using cycle/road network.
+
+NOTE: This requires using Open Source Routing (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and installed into OSRM.
+
+```{r, eval=FALSE, echo=TRUE}
 # loop through sf and find a route from osrm...
-trips$id <- 1:nrow(trips)
 steps <- seq(from = 1000, to = 664586, by = floor(nrow(trips) / 500))
 
 purrr::map_df(split(trips, trips$id), function(trip) {
-  message(trip$id)
-  url <- paste0("http://127.0.0.1:5000/route/v1/bicycle/",
- trip$start_long, ",", trip$start_lat, ";", trip$finish_long, ",", trip$finish_lat, "?steps=false&geometries=geojson&exclude=motorway")
+  message(trip$id) # 249534 last id saved.
+  url <- paste0(
+    "http://127.0.0.1:5000/route/v1/bicycle/",
+    trip$start_long, ",", trip$start_lat, ";", trip$finish_long, ",", trip$finish_lat, "?steps=false&geometries=geojson"
+  )
   route <- readLines((curl::curl(url)))
- # route <-  readLines(curl::curl("http://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.397634,52.529407?exclude=[motorway]"))
- 
-route <-  jsonlite::fromJSON(route)
-json_route <- jsonlite::toJSON(route$routes$geometry)
-# Need to remove '[' bracket at start and end of json. 
-json_route <- substr(json_route, start=2, stop = nchar(json_route)-1)
-geo <- st_read(json_route, quiet = TRUE)
-st_write(geo, "trips.geojson", append = TRUE, quiet = TRUE)
-  
+
+  route <- jsonlite::fromJSON(route)
+  json_route <- jsonlite::toJSON(route$routes$geometry)
+  # Need to remove '[' bracket at start and end of json.
+  json_route <- substr(json_route, start = 2, stop = nchar(json_route) - 1)
+  geo <- st_read(json_route, quiet = TRUE)
+  st_write(geo, "trips.geojson", append = TRUE, quiet = TRUE)
 })
-
-
-
-# steps <- seq(from = 1, to = 1000,
-#              by = floor(nrow(map_routes) / 20))
-# names(steps) <- 1:length(steps)
-# n <- 1
-trips$day <- day(trips$`Start time`)
-trips$day  <- str_pad(trips$day, pad = 0, width = 2)
-trips$year_day <- as.integer(paste0(trips$year, trips$week , trips$day))
-
-map_routes3 <- bind_cols(routes, trips[1:10000,])
-map_routes3$lat_1 <- seq(from = -4.29202, to = -4.4, by = -((-4.26202 - -4.4) / 4000))[1:4000]
-
-map_routes3$lat_2 <- seq(from = -4.21866, to = -4.1, by = -((-4.24866 - -4.1) / 4000))[1:4000]
-map_routes3$lon_3 <- seq(from = 55.8347, to = 55.8, by = -((55.8647 - 55.7) / 4000))[1:4000]
-map_routes3$lon_4 <- seq(from = 55.8966, to = 55.9, by = -((55.8666 - 55.9) / 4000))[1:4000]
-# map_routes <- bind_rows(map_routes, map_routes)
-steps <- trips[1:4000,] %>% group_by(year_day) %>%
-  summarise(steps = max(id))
-   steps$id <- 1:nrow(steps)       
-plots <- map(split(steps, steps$id), function(step) {
-  # browser()
-   n <- step$id
-   data <- map_routes3[1:step$steps, ]
-   lat_1 <- min(data$lat_1) 
-   lat_2 <- max(data$lat_2) 
-   lon_1 <- min(data$lon_3) 
-   lon_2 <- max(data$lon_4) 
-     # data <- map_routes3
- 
-  ggsave(paste0("routes/", n, ".png"), width = 5, height = 4) 
-  # return(g)
-  
-})
-
-
-n <- 1
-aligned_plots <- align_plots(plots[[1]],plots[[23]] ,align="hv")
-
-map(aligned_plots[[2]], function(map) {
-  
-
-  ggsave(paste0("routes/", n, ".png"), width = 5, height = 4)
-  n <<- n +1
-})
-
-
-# curl "https://router.project-osrm.org/route/v1/bike/13.388860,52.517037;13.385983,52.496891?steps=false&geometries=geojson"
-#  curl "http://127.0.0.1:5000/route/v1/bike/13.388860,52.517037;13.385983,52.496891?steps=false&geometries=geojson"
 ```
 
+## Animate Routes
+
+This section requires ffmpeg to give fine control to generating gif and mpegs videos. 
+
+```{r, eval=FALSE, echo=TRUE}
+routes <- st_read("trips.geojson")
+trips$day <- day(trips$`Start time`)
+trips$day <- str_pad(trips$day, pad = 0, width = 2)
+trips$year_day <- as.integer(paste0(trips$year, trips$week, trips$day))
+
+map_routes3 <- bind_cols(routes, trips[1:nrow(routes), ])
+map_routes3$lat_1 <- seq(from = -4.29202, to = -4.4, by = -((-4.26202 - -4.4) / nrow(routes)))[1:nrow(routes)]
+
+map_routes3$lat_2 <- seq(from = -4.21866, to = -4.1, by = -((-4.24866 - -4.1) / nrow(routes)))[1:nrow(routes)]
+map_routes3$lon_3 <- seq(from = 55.8347, to = 55.8, by = -((55.8647 - 55.7) / nrow(routes)))[1:nrow(routes)]
+map_routes3$lon_4 <- seq(from = 55.8966, to = 55.9, by = -((55.8666 - 55.9) / nrow(routes)))[1:nrow(routes)]
+
+steps <- trips[1:nrow(routes), ] %>%
+  group_by(year_day) %>%
+  summarise(steps = max(id))
+steps$id <- 1:nrow(steps)
+plots <- map(split(steps, steps$id), function(step) {
+  # browser()
+  n <- step$id
+  message(n)
+  data <- map_routes3[1:step$steps, ]
+  lat_1 <- min(data$lat_1)
+  lat_2 <- max(data$lat_2)
+  lon_1 <- min(data$lon_3)
+  lon_2 <- max(data$lon_4)
+  g <- ggplot() +
+    geom_sf(
+      data = data, mapping = aes(
+        colour = arrival_month,
+        alpha = 0.9
+      ),
+      show.legend = FALSE
+    ) +
+    # Fixed lat/lon:
+    #lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
+    # Dynamic lat/lon:
+    lims(x = c(lat_1, lat_2), y = c(lon_1, lon_2)) +
+    ggtitle(max(data$year)) +
+    theme_void() +
+    theme(
+      plot.background = element_rect(fill = "black", color = "black"),
+      plot.title = element_text(
+        color = "purple",
+        size = 14,
+        face = "bold",
+        hjust = 0.5,
+        vjust = 0
+      )
+    ) +
+    scale_colour_gradient(low = "blue", high = "violet", trans = "reverse")
+  return(g)
+})
+
+n <- 1
+map(plots[1:715], function(plot) {
+  ggsave(paste0("routes/", n, ".png"), 
+         plot = plot, 
+         width = 5, 
+         height = 4)
+  n <<- n + 1
+  message(n)
+})
+
+# Use ffmpeg system / command line library:
+# ffmpeg -i video.mp4 -r 12 -s 320x180 output.gif
+# ffmpeg -f image2 -framerate 15 -i 'routes/%d.png' -vcodec libx264 -crf 22 video.mp4
+
+
+```
+
+![Routes Animation](/home/tim/Documents/Projects/opendatascot/vignettes/in-progress/video-2.mp4){width=50%}
