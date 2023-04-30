@@ -38,13 +38,13 @@ terms in the dataset's title.
 ```{r search}
 library(opendatascotland)
 # View all available datasets and associated metadata
-all_datasets <- search_ods()
+all_datasets <- ods_search()
 
 # Search dataset titles containing matching terms (case insensitive)
-single_query <- search_ods("Number of bikes")
+single_query <- ods_search("Number of bikes")
 
 # Search multiple terms
-multi_query <- search_ods(c("Bins", "Number of bikes"))
+multi_query <- ods_search(c("Bins", "Number of bikes"))
 head(multi_query)
 ```
 
@@ -58,29 +58,29 @@ be downloaded. These formats cover the majority of data available. You
 will be warned if a dataset can't be downloaded.
 
 To download data, you can either download the metadata using
-`search_ods()`, then pass that data frame to `get_ods()`
+`ods_search()`, then pass that data frame to `ods_get()`
 
 ```{r}
-query <- search_ods("bins")
+query <- ods_search("bins")
 ```
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(query, ask = FALSE)
+data <- ods_get(query, ask = FALSE)
 ```
 
 ``` {r
-data <- get_ods(query)
+data <- ods_get(query)
 ```
 
-***Or*** use the search argument in `get_ods(search="my search term")`
+***Or*** use the search argument in `ods_get(search="my search term")`
 to search and download any matching datasets in one step.
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "bins", ask = FALSE)
+data <- ods_get(search = "bins", ask = FALSE)
 ```
 
 ``` {r
-data <- get_ods(search = "bins")
+data <- ods_get(search = "bins")
 ```
 
 By default, you will be asked if you want to save the data locally on
@@ -88,7 +88,7 @@ the first download. Optionally, you can refresh the data or avoid being
 asked to save data.
 
 ``` r
-data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 
 # Plot
@@ -97,14 +97,14 @@ Once you have downloaded the dataset(s), you may wish to plot or map the
 data. Here's a short example of how plotting can be done.
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "Recycling Point Locations", ask = FALSE)
+data <- ods_get(search = "Recycling Point Locations", ask = FALSE)
 ```
 
 ``` r
-data <- get_ods(search = "Recycling Point Locations")
+data <- ods_get(search = "Recycling Point Locations")
 ```
 
-The `get_ods()` function returned a named list of data frames - lets
+The `ods_get()` function returned a named list of data frames - lets
 select the one we want by name:
 
 ```{r}
@@ -147,11 +147,11 @@ Let's download the Glasgow cycle counts data which is only available in
 JSON format.
 
 ```{r, echo=FALSE, message=FALSE}
-cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE, refresh = TRUE)
+cycle_count <- ods_get(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE, refresh = TRUE)
 ```
 
 ``` {r
-cycle_count <- get_ods(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
+cycle_count <- ods_get(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
 ```
 
 ```{r}

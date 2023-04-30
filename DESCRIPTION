@@ -1,13 +1,13 @@
 Package: opendatascotland
 Title: Download data from OpenData.Scot
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Tim", "Foster", , "fozy81@hotmail.com", role = c("aut", "cre"))
 Description: R library wrapper for datasets compiled on opendata.scot website.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
   dplyr,
   gtools,

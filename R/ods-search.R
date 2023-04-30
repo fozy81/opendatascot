@@ -14,10 +14,10 @@
 #' @importFrom purrr map_dfr
 #' @importFrom tibble as_tibble
 #' @examples
-#' all_datasets <- search_ods() # return ALL datasets
-#' data <- search_ods(search = "bicycle") # search datasets
-#' data <- search_ods(search = c("bicycle","bins")) # multiple search terms
-search_ods <- function(search = "") {
+#' all_datasets <- ods_search() # return ALL datasets
+#' data <- ods_search(search = "bicycle") # search datasets
+#' data <- ods_search(search = c("bicycle","bins")) # multiple search terms
+ods_search <- function(search = "") {
   stopifnot(class(search) == "character")
   datasets <- jsonlite::fromJSON("https://opendata.scot/datasets.json",
     flatten = TRUE

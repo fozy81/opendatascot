@@ -51,7 +51,7 @@ Search [opendata.scot](opendata.scot) for meta-data about Glasgow Next Bike Cycl
 
 ```{r metadata, echo = TRUE, comment=">>"}
 # Search and download
-metadata <- search_ods(search = "Next Bike Cycle Hire - Glasgow")
+metadata <- ods_search(search = "Next Bike Cycle Hire - Glasgow")
 metadata$licence
 ```
 
@@ -60,14 +60,14 @@ metadata$licence
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
 ```{r download, echo=FALSE, message=FALSE, warning=FALSE}
-trips <- get_ods(metadata, ask = FALSE)
+trips <- ods_get(metadata, ask = FALSE)
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
 trips <- trips[[1]]
 ```
 
 ``` {r
-trips <- get_ods(metadata)
+trips <- ods_get(metadata)
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
 trips <- trips[[1]]
@@ -192,12 +192,13 @@ cycle_map
 Let's explore trips that start and finish at a different location. This may give
 some insight into the lengths of journeys taken. We ignore trips that started
 and ended in the same place, as we can't tell how far or where they went.
+  
 - Remove points with missing data
 - Remove points outside Glasgow area
 - Remove trips with same start and end point
-
+  
 ```{r start-end-points, echo=TRUE}
-trips <- get_ods(metadata)
+trips <- ods_get(metadata)
 trips <- trips[[1]]
 trips <- trips %>%
   filter(!is.na(`START LAT`) &
@@ -271,11 +272,11 @@ sf::st_crs(sf) <- 4326 ## Assume it's in Web Mercator
 
 Summarize the average 'as the crow flies' trip distances:
   
-- **Max distance:** `r round(max(st_length(sf)))`
+- **Max distance:** `r round(max(st_length(sf)))`m
   
-- **Min distance:**  `r round(min(st_length(sf)), 2)`
+- **Min distance:**  `r round(min(st_length(sf)), 2)`m (!)
   
-- **Average distance:** `r round(mean(st_length(sf)))`
+- **Average distance:** `r round(mean(st_length(sf)))`m
 
 # Map
 
@@ -341,7 +342,9 @@ av::av_capture_graphics(make_plot(), video_file, 512 , 480, vfilter = "framerate
 
 Let's take the start and end point of the trip and use a route planning engine to provide a line. This route plan uses the cycle network, avoiding busy roads. 
 
-NOTE: This requires having [Open Source Routing Machine](http://project-osrm.org/) (OSRM) library to be installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and add to OSRM.
+NOTE: This requires having the [Open Source Routing Machine](http://project-osrm.org/) (OSRM) library installed locally. Please follow link and install. Additionally, the OpenStreetMap data for Scotland needs to be downloaded and add to OSRM.
+
+Running this code may take many days!...
 
 ```{r, eval=FALSE, echo=TRUE}
 # loop through sf and find a route from osrm...
@@ -438,6 +441,6 @@ map(plots[1:715], function(plot) {
 
 ```
 
-The resulting animations shows the shortest routes cyclists may use to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow looks those hiring bikes. 
+The resulting animations shows the shortest routes cyclists may use to travel A to B using the cycle network. Of course, people hiring bikes may have chosen a different route but it gives some idea how the transport network in Glasgow is used by those hiring bikes. 
 
 <img alt="Routes Animation" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/routes.gif?raw=true" width="450" align="center"/>

@@ -42,16 +42,16 @@ devtools::install_github("fozy81/opendatascot")
 
 Search all available datasets by using the `ods_search()` function. Additionally, use the `search` argument to filter datasets by title.
 
-```{r search}
+```{r search, warning=FALSE}
 library(opendatascotland)
 # View all available datasets and associated metadata
-all_datasets <- search_ods()
+all_datasets <- ods_search()
 
 # Search dataset titles containing matching terms (case insensitive)
-single_query <- search_ods("Number of bikes")
+single_query <- ods_search("Number of bikes")
 
 # Search multiple terms
-multi_query <- search_ods(c("Bins", "Number of bikes"))
+multi_query <- ods_search(c("Bins", "Number of bikes"))
 head(multi_query, 4)
 ```
 
@@ -64,19 +64,19 @@ Currently, only datasets available in `.csv`, `.json` or `.geojson` can be
 downloaded. These formats cover the majority of data available. You will be
 warned if data can't be downloaded.
   
-To download data, you can either download the metadata using `search_ods()`,
-then pass that data frame to `get_ods()`
+To download data, you can either download the metadata using `ods_search()`,
+then pass that data frame to `ods_get()`
 
 ```{r}
-query <- search_ods("Grit bins")
-data <- get_ods(query)
+query <- ods_search("bins")
+data <- ods_get(query)
 ```
 
-Or use the search argument in `get_ods(search="my search term")` to search and
+Or use the search argument in `ods_get(search="my search term")` to search and
 download matching datasets in one step.
 
 ```{r}
-data <- get_ods(search = "Grit bins")
+data <- ods_get(search = "bins")
 ```
 
 By default, you will be asked if you want to save the data locally on the first
@@ -84,28 +84,31 @@ download. Optionally, you can refresh the data or avoid being asked to save
 data.
 
 ```r
-data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 ## Plot
 
 ```{r, echo=FALSE, message=FALSE}
-data <- get_ods(search = "Air Quality - Diffusion Tubes")
+data <- ods_get(search = "Recycling Point Locations",
+                ask = FALSE,
+                refresh = TRUE)
 ```
 
+
 ```r
-data <- get_ods(search = "Air Quality - Diffusion Tubes")
+data <- ods_get(search = "Recycling Point Locations")
 ```
-The `get_ods()` function returned a named list of data frames - lets select the
+The `ods_get()` function returned a named list of data frames - lets select the
 one we want by name:
 
 ```{r}
-air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+recycling_points <- data$Recycling_Point_Locations_Dundee_City_Council
 ```
 
 Or alternatively select the first data frame in the list using index of 1.
 
 ```{r}
-air_tubes <- data[[1]]
+recycling_points <- data[[1]]
 ```
 
 Geojson datasets are automating converted to  [simple
@@ -114,14 +117,14 @@ example the data frame is classed as "sf" which mean spatial / geometry
 coordinates are held in a `geometry` column.
 
 ```{r}
-class(air_tubes) 
+class(recycling_points) 
 ```
 
 These allows the `plot()` function to automatically plot the coordinates in the
 geometry column.
 
 ```{r}
-plot(air_tubes$geometry, 
-     col = as.factor(air_tubes$LOCATION))
+plot(recycling_points$geometry, 
+     col = as.factor(recycling_points$LOCATION))
 ```
 

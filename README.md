@@ -38,23 +38,23 @@ Additionally, use the `search` argument to filter datasets by title.
 ``` r
 library(opendatascotland)
 # View all available datasets and associated metadata
-all_datasets <- search_ods()
+all_datasets <- ods_search()
 
 # Search dataset titles containing matching terms (case insensitive)
-single_query <- search_ods("Number of bikes")
+single_query <- ods_search("Number of bikes")
 
 # Search multiple terms
-multi_query <- search_ods(c("Bins", "Number of bikes"))
+multi_query <- ods_search(c("Bins", "Number of bikes"))
 head(multi_query, 4)
 #> # A tibble: 4 × 11
-#>   unique_id            title organization notes category url   resources licence
-#>   <chr>                <chr> <chr>        <chr> <list>   <chr> <list>    <chr>  
-#> 1 Communal_Bins_City_… Comm… City of Edi… "<p>… <chr>    /dat… <df>      No lic…
-#> 2 Grit_Bins_City_of_E… Grit… City of Edi… "<p>… <chr>    /dat… <df>      No lic…
-#> 3 Salt_Bins_Dumfries_… Salt… Dumfries an… "<p>… <chr>    /dat… <df>      UK Ope…
-#> 4 Public_Litter_Bins_… Publ… Dundee City… "<p>… <chr>    /dat… <df>      UK Ope…
-#> # … with 3 more variables: date_created <chr>, date_updated <chr>,
-#> #   org_type <chr>
+#>   unique_id    title organ…¹ notes categ…² url   resou…³ licence date_…⁴ date_…⁵
+#>   <chr>        <chr> <chr>   <chr> <list>  <chr> <list>  <chr>   <chr>   <chr>  
+#> 1 Salt_Bins_D… Salt… Dumfri… "<p>… <chr>   /dat… <df>    UK Ope… 2017-1… 2019-0…
+#> 2 Public_Litt… Publ… Dundee… "<p>… <chr>   /dat… <df>    UK Ope… 2018-0… 2019-0…
+#> 3 Solar_Power… Sola… Dundee… "<p>… <chr>   /dat… <df>    Open D… 2018-0… 2019-0…
+#> 4 Number_of_b… Numb… Cyclin… "<p>… <chr>   /dat… <df>    UK Ope… 2018-0… 2023-0…
+#> # … with 1 more variable: org_type <chr>, and abbreviated variable names
+#> #   ¹​organization, ²​category, ³​resources, ⁴​date_created, ⁵​date_updated
 ```
 
 Note, search term is case-insensitive but word order must be correct
@@ -67,22 +67,24 @@ be downloaded. These formats cover the majority of data available. You
 will be warned if data can’t be downloaded.
 
 To download data, you can either download the metadata using
-`search_ods()`, then pass that data frame to `get_ods()`
+`ods_search()`, then pass that data frame to `ods_get()`
 
 ``` r
-query <- search_ods("Grit bins")
-data <- get_ods(query)
-#> 'Grit Bins' dataset was last downloaded on 2022-07-31
-#> 'Grit Bins' dataset was last downloaded on 2022-07-31
+query <- ods_search("bins")
+data <- ods_get(query)
+#> 'Public Litter Bins' dataset was last downloaded on 2023-04-30
+#> 'Salt Bins' dataset was last downloaded on 2023-04-30
+#> 'Solar Powered Compactor Bins' dataset was last downloaded on 2023-04-30
 ```
 
-Or use the search argument in `get_ods(search="my search term")` to
+Or use the search argument in `ods_get(search="my search term")` to
 search and download matching datasets in one step.
 
 ``` r
-data <- get_ods(search = "Grit bins")
-#> 'Grit Bins' dataset was last downloaded on 2022-07-31
-#> 'Grit Bins' dataset was last downloaded on 2022-07-31
+data <- ods_get(search = "bins")
+#> 'Public Litter Bins' dataset was last downloaded on 2023-04-30
+#> 'Salt Bins' dataset was last downloaded on 2023-04-30
+#> 'Solar Powered Compactor Bins' dataset was last downloaded on 2023-04-30
 ```
 
 By default, you will be asked if you want to save the data locally on
@@ -90,27 +92,27 @@ the first download. Optionally, you can refresh the data or avoid being
 asked to save data.
 
 ``` r
-data <- get_ods(search = "Number of bikes", refresh = TRUE, ask = FALSE)
+data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 
 ## Plot
 
 ``` r
-data <- get_ods(search = "Air Quality - Diffusion Tubes")
+data <- ods_get(search = "Recycling Point Locations")
 ```
 
-The `get_ods()` function returned a named list of data frames - lets
+The `ods_get()` function returned a named list of data frames - lets
 select the one we want by name:
 
 ``` r
-air_tubes <- data$`Air_Quality_-_Diffusion_Tubes_Aberdeen_City_Council`
+recycling_points <- data$Recycling_Point_Locations_Dundee_City_Council
 ```
 
 Or alternatively select the first data frame in the list using index of
 1.
 
 ``` r
-air_tubes <- data[[1]]
+recycling_points <- data[[1]]
 ```
 
 Geojson datasets are automating converted to [simple
@@ -119,7 +121,7 @@ the example the data frame is classed as “sf” which mean spatial /
 geometry coordinates are held in a `geometry` column.
 
 ``` r
-class(air_tubes) 
+class(recycling_points) 
 #> [1] "sf"         "data.frame"
 ```
 
@@ -127,8 +129,8 @@ These allows the `plot()` function to automatically plot the coordinates
 in the geometry column.
 
 ``` r
-plot(air_tubes$geometry, 
-     col = as.factor(air_tubes$LOCATION))
+plot(recycling_points$geometry, 
+     col = as.factor(recycling_points$LOCATION))
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />

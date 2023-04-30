@@ -1,10 +1,10 @@
 # API ideas:
 
-data <- search_ods("communal bins") |>
-        download_ods()
+data <- ods_search("communal bins") |>
+        ods_get()
 ggplot(data)
-data <- search_ods("communal bins") |>
-  download_ods()
+data <- ods_search("communal bins") |>
+  ods_get()
 
  # data <- tibble::tibble(title = names(data), data = list(data$`Communal Bins`))
   data$plots <- data %>%
@@ -27,8 +27,8 @@ data |> split(data$title) |> map()
 purrr::map(data, )
 ggplot(data, aes(data$`Communal Bins`))
 
-search_ods() %>%
-download_ods(ask = FALSE)
+ods_search() %>%
+ods_get(ask = FALSE)
 
 
 

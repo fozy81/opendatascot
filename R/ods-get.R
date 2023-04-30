@@ -5,7 +5,7 @@
 #' formats, a warning is provided. By default data is saved locally to avoid
 #' re-downloading on subsequent requests.
 #'
-#' @param data Dataframe from `search_ods()` or if default (NULL), will download
+#' @param data Dataframe from `ods_search()` or if default (NULL), will download
 #'   all datasets.
 #' @param search Search term(s) if `data` parameter not provided.
 #' @param refresh Refresh cached data. If data has changed remotely, use this to
@@ -29,15 +29,15 @@
 #' @export
 #'
 #' @examples
-#' search <- search_ods("Grit bins")
-#' data <- get_ods(search, refresh = TRUE, ask = FALSE)
-get_ods <- function(data = NULL,
+#' search <- ods_search("bins")
+#' data <- ods_get(search, refresh = TRUE, ask = FALSE)
+ods_get <- function(data = NULL,
                     search = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
   if (is.null(data) & is.null(search)) {
     message("`data` & `search` arguments are NULL, downloading all ods datasets!")
-    data <- search_ods()
+    data <- ods_search()
   }
 
   if (!is.null(data) & !is.null(search)) {
@@ -45,7 +45,10 @@ get_ods <- function(data = NULL,
   }
 
   if (!is.null(search)) {
-    data <- search_ods(search)
+    data <- ods_search(search)
+    if(nrow(data) < 1){
+      return(data)
+    }
   }
   if(is.null(search)) {
   stopifnot("data must be a dataframe" = any(class(data) %in% "data.frame"))
@@ -60,8 +63,8 @@ get_ods <- function(data = NULL,
     if (!file.exists(file_path) | refresh) {
       title <- dataset$title
       dataset <- select(dataset, .data$title, .data$resources)
-      dataset <- unnest(dataset, cols = "resources")
-      dataset <- filter(dataset, format %in% c("CSV", "GEOJSON", "JSON"))
+      dataset <- unnest(dataset, cols = "resources", names_sep= "_")
+      dataset <- filter(dataset, resources_format %in% c("CSV", "GEOJSON", "JSON"))
       if (nrow(dataset) < 1) {
         warning(paste(title,
           "Is not available in a supported format (CSV, GEOJSON & JSON), try direct
@@ -73,19 +76,19 @@ download from openscot.data",
         return()
       }
       create_data_dir(dir, ask, dataset[1, ])
-      if (any(dataset$format %in% "GEOJSON")) {
-        dataset <- filter(dataset, format == "GEOJSON")
-        url <- dataset$url[1]
+      if (any(dataset$resources_format %in% "GEOJSON")) {
+        dataset <- filter(dataset, .data$resources_format == "GEOJSON")
+        url <- dataset$resources_url[1]
         data <- read_file(url)
         data <- st_read(dsn = data, quiet = TRUE)
-      } else if (any(dataset$format %in% "CSV")) {
-        dataset <- filter(dataset, format == "CSV")
-        url <- dataset$url[1]
+      } else if (any(dataset$resources_format %in% "CSV")) {
+        dataset <- filter(dataset, .data$resources_format == "CSV")
+        url <- dataset$resources_url[1]
         data <- read_csv(url, show_col_types = FALSE)
         data <- as_tibble(data)
       } else {
-        dataset <- filter(dataset, format == "JSON")
-        url <- dataset$url[1]
+        dataset <- filter(dataset, .data$resources_format == "JSON")
+        url <- dataset$resources_url[1]
         data <- read_file(url)
         data <- fromJSON(txt = data, flatten = TRUE)
         data <- as_tibble(data)
