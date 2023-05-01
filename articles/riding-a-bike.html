@@ -74,9 +74,9 @@
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
-<p>Let’s take a look at the Glasgow bike hire trip data. Firstly, load
-all the libraries we’ll need for the analysis. Note, you may need to
-install these first.</p>
+<p>Let’s take a look at the Glasgow bike hire trip data. First, load all
+the libraries we’ll need for the analysis. Note, you may need to install
+these first.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="co"># devtools::install_github("fozy81/opendatascot")</span></span>
@@ -282,7 +282,7 @@ or where they went.</p>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ods_get.html">ods_get</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2022)' dataset was last downloaded on 2023-04-30</span></span>
+<span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2022)' dataset was last downloaded on 2023-05-01</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
