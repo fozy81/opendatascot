@@ -436,8 +436,8 @@ map(plots[1:715], function(plot) {
 })
 
 # Use ffmpeg system / command line library:
-# ffmpeg -i video.mp4 -r 4 -s 512x420 output.gif
 # ffmpeg -f image2 -framerate 15 -i 'routes/%d.png' -vcodec libx264 -crf 22 video.mp4
+# ffmpeg -i video.mp4 -r 4 -s 512x420 output.gif
 
 ```
 
