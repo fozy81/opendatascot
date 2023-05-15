@@ -150,8 +150,7 @@ JSON format.
 ```{r, echo=FALSE, message=FALSE}
 cycle_count <- ods_get(
   search =
-    "lasgow City Council - Daily cycling counts from automatic cycling
-  counters",
+    "Glasgow City Council - Daily cycling counts from automatic cycling",
   ask = FALSE,
   refresh = TRUE
 )
