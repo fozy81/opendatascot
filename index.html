@@ -88,13 +88,12 @@
 <span><span class="va">multi_query</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ods_search.html">ods_search</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bins"</span>, <span class="st">"Number of bikes"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">multi_query</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 11</span></span>
-<span><span class="co">#&gt;   unique_id    title organ…¹ notes categ…² url   resou…³ licence date_…⁴ date_…⁵</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;list&gt;  &lt;chr&gt; &lt;list&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1 Salt_Bins_D… Salt… Dumfri… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    UK Ope… 2017-1… 2019-0…</span></span>
-<span><span class="co">#&gt; 2 Public_Litt… Publ… Dundee… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    UK Ope… 2018-0… 2019-0…</span></span>
-<span><span class="co">#&gt; 3 Solar_Power… Sola… Dundee… "&lt;p&gt;… &lt;chr&gt;   /dat… &lt;df&gt;    Open D… 2018-0… 2019-0…</span></span>
-<span><span class="co">#&gt; # … with 1 more variable: org_type &lt;chr&gt;, and abbreviated variable names</span></span>
-<span><span class="co">#&gt; #   ¹​organization, ²​category, ³​resources, ⁴​date_created, ⁵​date_updated</span></span></code></pre></div>
+<span><span class="co">#&gt;   unique_id            title organization notes category url   resources licence</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;list&gt;   &lt;chr&gt; &lt;list&gt;    &lt;chr&gt;  </span></span>
+<span><span class="co">#&gt; 1 Salt_Bins_Dumfries_… Salt… Dumfries an… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      UK Ope…</span></span>
+<span><span class="co">#&gt; 2 Public_Litter_Bins_… Publ… Dundee City… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      UK Ope…</span></span>
+<span><span class="co">#&gt; 3 Solar_Powered_Compa… Sola… Dundee City… "&lt;p&gt;… &lt;chr&gt;    /dat… &lt;df&gt;      Open D…</span></span>
+<span><span class="co">#&gt; # ℹ 3 more variables: date_created &lt;chr&gt;, date_updated &lt;chr&gt;, org_type &lt;chr&gt;</span></span></code></pre></div>
 <p>Note, search term is case-insensitive but word order must be correct (there is no ‘fuzzy’ matching).</p>
 </div>
 <div class="section level2">
@@ -124,7 +123,7 @@
 <code class="sourceCode R"><span><span class="va">recycling_points</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Geojson datasets are automating converted to <a href="https://r-spatial.github.io/sf/" class="external-link">simple feature</a> ‘sf’ data. This helps make geospatial data easier to handle in R. As we can see in this example the data frame is classed as “sf” which means spatial / geometry coordinates are held in a <code>geometry</code> column.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">recycling_points</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">recycling_points</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "sf"         "data.frame"</span></span></code></pre></div>
 <p>This allows the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function to automatically plot the coordinates in the geometry column.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
