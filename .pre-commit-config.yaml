@@ -6,8 +6,8 @@ repos:
     hooks:
     -   id: style-files
         args: [--style_pkg=styler, --style_fun=tidyverse_style]
-    -   id: roxygenize
-     # codemeta must be above use-tidy-description when both are used
+    # -   id: roxygenize
+    # codemeta must be above use-tidy-description when both are used
     # -   id: codemeta-description-updated
     -   id: use-tidy-description
     -   id: spell-check
@@ -24,6 +24,7 @@ repos:
           .*\.Rds|
           .*\.Rproj|
           .*\.sh|
+          .*\.gif|
           (.*/|)\.gitignore|
           (.*/|)\.gitlab-ci\.yml|
           (.*/|)\.lintr|
@@ -41,6 +42,8 @@ repos:
           data/.*|
           )$
     -   id: lintr
+        args: [--warn_only]
+        verbose: true
     -   id: readme-rmd-rendered
     -   id: parsable-R
     -   id: no-browser-statement

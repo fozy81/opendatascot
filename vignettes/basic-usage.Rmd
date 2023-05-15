@@ -10,6 +10,7 @@ vignette: >
 editor_options: 
   markdown: 
     wrap: 72
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -35,7 +36,7 @@ available datasets and viewing their metadata. Use `ods_search()`
 function to view metadata for all datasets or filter by matching search
 terms in the dataset's title.
 
-```{r search}
+```{r search, warning=FALSE}
 library(opendatascotland)
 # View all available datasets and associated metadata
 all_datasets <- ods_search()
@@ -124,7 +125,7 @@ the example the data frame is classed as "sf" which means spatial /
 geometry attributes are baked in.
 
 ```{r}
-class(recycling_points) 
+class(recycling_points)
 ```
 
 You can see a `geometry` variable which contains the spatial
@@ -147,7 +148,13 @@ Let's download the Glasgow cycle counts data which is only available in
 JSON format.
 
 ```{r, echo=FALSE, message=FALSE}
-cycle_count <- ods_get(search = "lasgow City Council - Daily cycling counts from automatic cycling counters", ask = FALSE, refresh = TRUE)
+cycle_count <- ods_get(
+  search =
+    "lasgow City Council - Daily cycling counts from automatic cycling
+  counters",
+  ask = FALSE,
+  refresh = TRUE
+)
 ```
 
 ``` {r
@@ -166,14 +173,13 @@ create a graph. We'll display counts over time for each location.
 
 ```{r}
 library(ggplot2)
-# Convert character to date (to display date time correctly) 
+# Convert character to date (to display date time correctly)
 cycle_count$Date <- as.Date(cycle_count$startTime)
 # Plot
 ggplot(cycle_count, aes(x = Date, y = count, colour = as.factor(location))) +
   geom_line() +
   theme_minimal() +
   theme(legend.position = "none")
-
 ```
 
 This is a bit noisy so lets sum the counts for all locations to see
@@ -186,13 +192,12 @@ library(magrittr)
 
 # Group by date and sum the count
 sum_cycle_count <- cycle_count %>%
-  group_by(Date) %>% 
+  group_by(Date) %>%
   summarise(`Total Count` = sum(count))
 #  Graph the new `sum_count` variable
-ggplot(sum_cycle_count, aes(x = Date, y = `Total Count`)) + 
+ggplot(sum_cycle_count, aes(x = Date, y = `Total Count`)) +
   geom_line(colour = "blue") +
   theme_minimal()
-
 ```
 
 We can also use the latitude and longitude columns to plot the points on
@@ -204,7 +209,7 @@ library(sf)
 cycle_counts_geo <- st_as_sf(cycle_count, coords = c("longitude", "latitude"))
 # Sum counts by location
 cycle_counts_geo_sum <- cycle_counts_geo %>%
-  group_by(location) %>% 
+  group_by(location) %>%
   summarise(`Total Cycle Count` = sum(count))
 # plot
 c <- ggplot(cycle_counts_geo_sum) +
@@ -228,21 +233,25 @@ names(bbox_glasgow) <- c("left", "bottom", "right", "top")
 glasgow <- suppressMessages(ggmap(get_stamenmap(bbox_glasgow, zoom = 14)))
 
 # Plot background with cycle counts on top
-cycle_map <- glasgow + geom_point(data = cycle_counts_geo_sum,
-                                aes(
-                                x = unlist(map(geometry,1)),
-                                y = unlist(map(geometry,2)),
-                                size = `Total Cycle Count`),
-                                col="green", 
-                                pch=16, 
-                                alpha=0.4
-                          ) + 
-  theme_minimal() + 
-  theme(axis.title = element_blank(),
-        axis.text = element_blank())
-  
+cycle_map <- glasgow + geom_point(
+  data = cycle_counts_geo_sum,
+  aes(
+    x = unlist(map(geometry, 1)),
+    y = unlist(map(geometry, 2)),
+    size = `Total Cycle Count`
+  ),
+  col = "green",
+  pch = 16,
+  alpha = 0.4
+) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank()
+  )
 
-cycle_map 
+
+cycle_map
 ```
 
 Looks like

@@ -97,10 +97,14 @@ data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-data <- ods_get(search = c("Recycling Point Locations",
-                           "Public Litter Bins"),
-                            ask = FALSE,
-                            refresh = TRUE)
+data <- ods_get(
+  search = c(
+    "Recycling Point Locations",
+    "Public Litter Bins"
+  ),
+  ask = FALSE,
+  refresh = TRUE
+)
 ```
 
 The `ods_get()` function returns a named list of data frames
@@ -131,7 +135,7 @@ classed as "sf" which means spatial / geometry coordinates are held in a
 `geometry` column.
 
 ```{r}
-class(recycling_points) 
+class(recycling_points)
 ```
 
 This allows the `plot()` function to automatically plot the coordinates in the
@@ -140,4 +144,3 @@ geometry column.
 ```{r, fig.width=4}
 plot(recycling_points[, "GLASS"])
 ```
-

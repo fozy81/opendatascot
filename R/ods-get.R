@@ -35,26 +35,31 @@ ods_get <- function(data = NULL,
                     search = NULL,
                     refresh = FALSE,
                     ask = TRUE) {
-  if (is.null(data) & is.null(search)) {
-    message("`data` & `search` arguments are NULL, downloading all ods datasets!")
+  if (is.null(data) && is.null(search)) {
+    message(
+      "`data` & `search` arguments are NULL, downloading all ods datasets!"
+    )
     data <- ods_search()
   }
 
-  if (!is.null(data) & !is.null(search)) {
-    stop("You provided values to both data and search paramters, only one can be used")
+  if (!is.null(data) && !is.null(search)) {
+    stop(
+      "You provided values to both data and search parameters, only one can be
+      used"
+    )
   }
 
   if (!is.null(search)) {
     data <- ods_search(search)
-    if(nrow(data) < 1){
+    if (nrow(data) < 1) {
       return(data)
     }
   }
-  if(is.null(search)) {
+
   stopifnot("data must be a dataframe" = any(class(data) %in% "data.frame"))
   stopifnot("data must have more than one row" = nrow(data) != 0)
   stopifnot("data must have `unique_id` column" = !is.null(data$unique_id))
-  }
+
   output <- lapply(split(data, data$unique_id), function(dataset) {
     dir <- opendatascot_dir()
     file_name <- dataset$unique_id
@@ -63,15 +68,17 @@ ods_get <- function(data = NULL,
     if (!file.exists(file_path) | refresh) {
       title <- dataset$title
       dataset <- select(dataset, .data$title, .data$resources)
-      dataset <- unnest(dataset, cols = "resources", names_sep= "_")
-      dataset <- filter(dataset, resources_format %in% c("CSV", "GEOJSON", "JSON"))
+      dataset <- unnest(dataset, cols = "resources", names_sep = "_")
+      dataset <- filter(dataset, .data$resources_format %in%
+        c("CSV", "GEOJSON", "JSON"))
       if (nrow(dataset) < 1) {
-        warning(paste(title,
-          "Is not available in a supported format (CSV, GEOJSON & JSON), try direct
-download from openscot.data",
-          sep = "\n"
-        ),
-        call. = FALSE
+        warning(
+          paste(title,
+            "Is not available in a supported format (CSV, GEOJSON & JSON),
+          try direct download from openscot.data",
+            sep = "\n"
+          ),
+          call. = FALSE
         )
         return()
       }

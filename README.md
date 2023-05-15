@@ -47,13 +47,12 @@ single_query <- ods_search("Number of bikes")
 multi_query <- ods_search(c("Bins", "Number of bikes"))
 head(multi_query, 3)
 #> # A tibble: 3 × 11
-#>   unique_id    title organ…¹ notes categ…² url   resou…³ licence date_…⁴ date_…⁵
-#>   <chr>        <chr> <chr>   <chr> <list>  <chr> <list>  <chr>   <chr>   <chr>  
-#> 1 Salt_Bins_D… Salt… Dumfri… "<p>… <chr>   /dat… <df>    UK Ope… 2017-1… 2019-0…
-#> 2 Public_Litt… Publ… Dundee… "<p>… <chr>   /dat… <df>    UK Ope… 2018-0… 2019-0…
-#> 3 Solar_Power… Sola… Dundee… "<p>… <chr>   /dat… <df>    Open D… 2018-0… 2019-0…
-#> # … with 1 more variable: org_type <chr>, and abbreviated variable names
-#> #   ¹​organization, ²​category, ³​resources, ⁴​date_created, ⁵​date_updated
+#>   unique_id            title organization notes category url   resources licence
+#>   <chr>                <chr> <chr>        <chr> <list>   <chr> <list>    <chr>  
+#> 1 Salt_Bins_Dumfries_… Salt… Dumfries an… "<p>… <chr>    /dat… <df>      UK Ope…
+#> 2 Public_Litter_Bins_… Publ… Dundee City… "<p>… <chr>    /dat… <df>      UK Ope…
+#> 3 Solar_Powered_Compa… Sola… Dundee City… "<p>… <chr>    /dat… <df>      Open D…
+#> # ℹ 3 more variables: date_created <chr>, date_updated <chr>, org_type <chr>
 ```
 
 Note, search term is case-insensitive but word order must be correct
@@ -116,7 +115,7 @@ data frame is classed as “sf” which means spatial / geometry coordinates
 are held in a `geometry` column.
 
 ``` r
-class(recycling_points) 
+class(recycling_points)
 #> [1] "sf"         "data.frame"
 ```
 
