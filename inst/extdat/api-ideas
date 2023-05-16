@@ -29,6 +29,3 @@ ggplot(data, aes(data$`Communal Bins`))
 
 ods_search() %>%
 ods_get(ask = FALSE)
-
-
-
