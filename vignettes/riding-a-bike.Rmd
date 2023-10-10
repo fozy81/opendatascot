@@ -161,7 +161,10 @@ trips <- trips %>%
 ```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
+```
 
+
+```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE, eval=FALSE}
 # Bounding box for background map
 bbox <- map_dbl(st_bbox(trips), 1)
 names(bbox) <- c("left", "bottom", "right", "top")
@@ -192,6 +195,8 @@ cycle_map <- map + geom_point(
   ) + facet_wrap(vars(year))
 cycle_map
 ```
+
+
 
 ## Start and End Trips
 

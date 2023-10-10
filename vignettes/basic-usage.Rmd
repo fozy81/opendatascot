@@ -260,7 +260,7 @@ c
 Can you guess which points in Glasgow are most popular for cyclists? We
 can add a base layer map to reveal the streets.
 
-```{r map, message=FALSE, fig.width=7}
+```{r map, message=FALSE, fig.width=7, eval=FALSE}
 library(ggmap)
 library(purrr)
 
@@ -270,7 +270,7 @@ names(bbox_glasgow) <- c("left", "bottom", "right", "top")
 
 # Download background layer
 glasgow <- suppressMessages(ggmap(get_stamenmap(bbox_glasgow,
-  zoom = 11,
+  zoom = 10,
   https = TRUE,
   messaging = TRUE
 )))
@@ -296,6 +296,8 @@ cycle_map <- glasgow + geom_point(
 
 cycle_map
 ```
+
+
 
 ```{r location, echo=FALSE}
 # Find top location for cycle counts
