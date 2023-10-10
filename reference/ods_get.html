@@ -28,10 +28,10 @@ re-downloading on subsequent requests."><!-- mathjax --><script src="https://cdn
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-docs">Docs</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-docs">
-    <a class="dropdown-item" href="../articles/basic-usage.html">Basic Examples</a>
-    <a class="dropdown-item" href="../articles/riding-a-bike.html">Worked Example</a>
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-guides">Guides</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-guides">
+    <a class="dropdown-item" href="../articles/basic-usage.html">Basic Guide</a>
+    <a class="dropdown-item" href="../articles/riding-a-bike.html">Advanced Guide - Bike Hire</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -95,12 +95,11 @@ features <code>sf</code> class to aid spatial analysis.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">search</span> <span class="op">&lt;-</span> <span class="fu"><a href="ods_search.html">ods_search</a></span><span class="op">(</span><span class="st">"bins"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">ods_get</span><span class="op">(</span><span class="va">search</span>, refresh <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Creating directory to hold opendatascot data at ~/.local/share/opendatascot</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>One or more parsing issues, call `problems()` on your data frame for details,</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> e.g.:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dat &lt;- vroom(...)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   problems(dat)</span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">ods_get</span><span class="op">(</span><span class="va">search</span>, refresh <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving to opendatascot data directory at ~/.local/share/opendatascot</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving to opendatascot data directory at ~/.local/share/opendatascot</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Saving to opendatascot data directory at ~/.local/share/opendatascot</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving to opendatascot data directory at ~/.local/share/opendatascot</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving to opendatascot data directory at ~/.local/share/opendatascot</span>
 </code></pre></div>

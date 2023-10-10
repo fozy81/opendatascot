@@ -39,10 +39,10 @@
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-docs">Docs</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-docs">
-    <a class="dropdown-item" href="../articles/basic-usage.html">Basic Examples</a>
-    <a class="dropdown-item" href="../articles/riding-a-bike.html">Worked Example</a>
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-guides">Guides</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-guides">
+    <a class="dropdown-item" href="../articles/basic-usage.html">Basic Guide</a>
+    <a class="dropdown-item" href="../articles/riding-a-bike.html">Advanced Guide - Bike Hire</a>
   </div>
 </li>
       </ul>
@@ -104,8 +104,10 @@ provides it. Also we can confirm which open data licence is being
 used.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Search and download</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">ods_search</span>(<span class="at">search =</span> <span class="st">"Next Bike Cycle Hire - Glasgow"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>licence</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> [<span class="dv">1</span>] <span class="st">"UK Open Government Licence v3.0"</span></span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> Note, the cached list of datasets from opendata.scot was last</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> downloaded on <span class="dv">2023-10-10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>licence</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> [<span class="dv">1</span>] <span class="st">"UK Open Government Licence v3.0"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="download">Download<a class="anchor" aria-label="anchor" href="#download"></a>
@@ -124,7 +126,7 @@ quick) reference.</p>
 <p>Here we’ll get some summary stats to help us understand the data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">median_duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">Duration</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span>, <span class="st">"mins"</span><span class="op">)</span></span></code></pre></div>
-<p>Median trip duration is around: <code>14 mins</code></p>
+<p>Median trip duration is around: <code>15 mins</code></p>
 <p>Top 3 start locations:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -140,16 +142,16 @@ quick) reference.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="center">St Enoch Square - ELECTRIC</td>
-<td align="center">52587</td>
+<td align="center">Broomielaw - ELECTRIC</td>
+<td align="center">31220</td>
 </tr>
 <tr class="even">
-<td align="center">Broomielaw - ELECTRIC</td>
-<td align="center">51374</td>
+<td align="center">St Enoch Square - ELECTRIC</td>
+<td align="center">27949</td>
 </tr>
 <tr class="odd">
 <td align="center">Glasgow Green</td>
-<td align="center">46414</td>
+<td align="center">24474</td>
 </tr>
 </tbody>
 </table>
@@ -168,16 +170,16 @@ quick) reference.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="center">St Enoch Square - ELECTRIC</td>
-<td align="center">52087</td>
+<td align="center">Broomielaw - ELECTRIC</td>
+<td align="center">29665</td>
 </tr>
 <tr class="even">
-<td align="center">Broomielaw - ELECTRIC</td>
-<td align="center">50047</td>
+<td align="center">Partick Interchange</td>
+<td align="center">29441</td>
 </tr>
 <tr class="odd">
-<td align="center">Partick Interchange</td>
-<td align="center">48725</td>
+<td align="center">St Enoch Square - ELECTRIC</td>
+<td align="center">26820</td>
 </tr>
 </tbody>
 </table>
@@ -247,7 +249,11 @@ helps.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"bottom"</span>, <span class="st">"right"</span>, <span class="st">"top"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download background map using bounding box</span></span>
-<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html" class="external-link">ggmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html" class="external-link">get_stamenmap</a></span><span class="op">(</span><span class="va">bbox</span>, zoom <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html" class="external-link">ggmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html" class="external-link">get_stamenmap</a></span><span class="op">(</span><span class="va">bbox</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="fl">11</span>,</span>
+<span>  https <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  messaging <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot background with trips start points on top</span></span>
 <span><span class="va">cycle_map</span> <span class="op">&lt;-</span> <span class="va">map</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
@@ -284,7 +290,7 @@ or where they went.</p>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ods_get.html">ods_get</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2023)' dataset was last downloaded on 2023-05-16</span></span>
+<span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2023)' dataset was last downloaded on 2023-10-10</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
@@ -357,9 +363,9 @@ or where they went.</p>
 <span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span> <span class="co">## Assume it's in Web Mercator</span></span></code></pre></div>
 <p>Summarize the average ‘as the crow flies’ trip distances:</p>
 <ul>
-<li><p><strong>Max distance:</strong> 13719m</p></li>
+<li><p><strong>Max distance:</strong> 10719m</p></li>
 <li><p><strong>Min distance:</strong> 0.13m (!)</p></li>
-<li><p><strong>Average distance:</strong> 1962m</p></li>
+<li><p><strong>Average distance:</strong> 1959m</p></li>
 </ul>
 </div>
 </div>
