@@ -53,7 +53,7 @@ downloaded on", format(time, "%Y-%m-%d")
   }
   dataset <- filter(dataset, licence != "No licence")
   search_dfr <- map_dfr(search, function(search) {
-    dataset <- dataset[grep(tolower(search), tolower(datasets$title)), ]
+    dataset <- dataset[grep(tolower(search), tolower(dataset$title)), ]
 
     dataset <- dplyr::mutate(dataset, unique_id = paste(
       .data$title,
