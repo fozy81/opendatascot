@@ -11,3 +11,4 @@
 ^docs$
 ^opendatascot\.Rproj$
 ^pkgdown$
+^vignettes/in-progress/riding-a-bike_cache

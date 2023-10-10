@@ -4,12 +4,17 @@
 \alias{ods_search}
 \title{Search Open Data Scot Datasets}
 \usage{
-ods_search(search = "")
+ods_search(search = "", refresh = FALSE)
 }
 \arguments{
 \item{search}{A vector of search terms. Searches are performed on the title
 of the datasets and are case insensitive. If no search terms provided,
 metadata for all datasets will be returned.}
+
+\item{refresh}{A boolean to download a fresh list of opendatascot datasets
+from opendata.scot. Default is FALSE, in which case a cached dataset will
+be used (except if first time using function). A message will appear if
+cached dataset is more than a week old.}
 }
 \value{
 dataframe of metadata for available datasets (matching search term if
@@ -22,5 +27,5 @@ opendata.scot
 \examples{
 all_datasets <- ods_search() # return ALL datasets
 data <- ods_search(search = "bicycle") # search datasets
-data <- ods_search(search = c("bicycle","bins")) # multiple search terms
+data <- ods_search(search = c("bicycle", "bins")) # multiple search terms
 }

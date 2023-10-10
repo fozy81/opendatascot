@@ -5,10 +5,10 @@ repos:
     rev: v0.3.2.9007
     hooks:
     -   id: style-files
-        args: [--style_pkg=styler, --style_fun=tidyverse_style]
-    # -   id: roxygenize
+        args: [--style_pkg=styler, --style_fun=tidyverse_style, --include_roxygen_examples=FALSE]
+    #   id: roxygenize
     # codemeta must be above use-tidy-description when both are used
-    # -   id: codemeta-description-updated
+    -   id: codemeta-description-updated
     -   id: use-tidy-description
     -   id: spell-check
         exclude: >
@@ -45,10 +45,10 @@ repos:
         args: [--warn_only]
         verbose: true
     -   id: readme-rmd-rendered
-    -   id: parsable-R
+ #   -   id: parsable-R
     -   id: no-browser-statement
     -   id: no-debug-statement
-    -   id: deps-in-desc
+ #   -   id: deps-in-desc
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:

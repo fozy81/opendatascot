@@ -39,19 +39,22 @@ Additionally, use the `search` argument to query datasets by title.
 library(opendatascotland)
 # View all available datasets and associated metadata
 all_datasets <- ods_search()
+#> The cached list of datasets from opendata.scot was last downloaded on 2023-10-09
 
 # Search dataset titles containing matching terms (case insensitive)
 single_query <- ods_search("Number of bikes")
+#> The cached list of datasets from opendata.scot was last downloaded on 2023-10-09
 
 # Search multiple terms
 multi_query <- ods_search(c("Bins", "Number of bikes"))
+#> The cached list of datasets from opendata.scot was last downloaded on 2023-10-09
 head(multi_query, 3)
 #> # A tibble: 3 × 11
 #>   unique_id            title organization notes category url   resources licence
 #>   <chr>                <chr> <chr>        <chr> <list>   <chr> <list>    <chr>  
-#> 1 Salt_Bins_Dumfries_… Salt… Dumfries an… "<p>… <chr>    /dat… <df>      UK Ope…
-#> 2 Public_Litter_Bins_… Publ… Dundee City… "<p>… <chr>    /dat… <df>      UK Ope…
-#> 3 Solar_Powered_Compa… Sola… Dundee City… "<p>… <chr>    /dat… <df>      Open D…
+#> 1 Litter_Bins_Aberdee… Litt… Aberdeen Ci… <div… <chr>    /dat… <df>      UK Ope…
+#> 2 Communal_Bins_City_… Comm… City of Edi… <p><… <chr>    /dat… <df>      UK Ope…
+#> 3 Grit_Bins_City_of_E… Grit… City of Edi… <p><… <chr>    /dat… <df>      UK Ope…
 #> # ℹ 3 more variables: date_created <chr>, date_updated <chr>, org_type <chr>
 ```
 
@@ -76,7 +79,7 @@ Or use the search argument in `ods_get(search = "my search term")` to
 search and download matching datasets in one step.
 
 ``` r
-data <- ods_get(search = "Public Litter Bins")
+data <- ods_get(search = "Salt Bins")
 ```
 
 By default, you will be asked if you want to save the data locally on
@@ -90,16 +93,18 @@ data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 The `ods_get()` function returns a named list of data frames
 
 ``` r
-data <- ods_get(search = c("Public Litter Bins", "Public Litter Bins"))
+data <- ods_get(search = c("Salt Bins", "Recycling Points"))
 names(data)
-[1] "Public_Litter_Bins_Dundee_City_Council"       
-[2] "Recycling_Point_Locations_Dundee_City_Council"
+[1] "Glass_and_textiles_recycling_points_Aberdeenshire_Council"
+[2] "Recycling_Points_Aberdeen_City_Council"                   
+[3] "Recycling_Points_Moray_Council"                           
+[4] "Salt_Bins_Dumfries_and_Galloway_Council" 
 ```
 
 Select the dataset by name.
 
 ``` r
-recycling_points <- data$Recycling_Point_Locations_Dundee_City_Council
+recycling_points <- data$Recycling_Points_Aberdeen_City_Council
 ```
 
 Or alternatively select data frame in the list by position number.
@@ -123,7 +128,7 @@ This allows the `plot()` function to automatically plot the coordinates
 in the geometry column.
 
 ``` r
-plot(recycling_points[, "GLASS"])
+plot(recycling_points[, "TEXTILE_YN"])
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />

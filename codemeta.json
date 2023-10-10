@@ -12,7 +12,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.0 (2023-04-21)",
+  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
   "author": [
     {
       "@type": "Person",
@@ -188,6 +188,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "scales",
+      "name": "scales",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=scales"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "sfheaders",
       "name": "sfheaders",
       "provider": {
@@ -359,7 +371,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "690009.455KB",
+  "fileSize": "613223.996KB",
   "relatedLink": "https://fozy81.github.io/opendatascot/",
   "readme": "https://github.com/fozy81/opendatascot/blob/master/README.md",
   "contIntegration": ["https://github.com/fozy81/opendatascot/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/fozy81/opendatascot?branch=master"],

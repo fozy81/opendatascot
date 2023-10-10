@@ -167,7 +167,11 @@ bbox <- map_dbl(st_bbox(trips), 1)
 names(bbox) <- c("left", "bottom", "right", "top")
 
 # Download background map using bounding box
-map <- suppressMessages(ggmap(get_stamenmap(bbox, zoom = 12)))
+map <- suppressMessages(ggmap(get_stamenmap(bbox,
+  zoom = 11,
+  https = TRUE,
+  messaging = TRUE
+)))
 
 # Plot background with trips start points on top
 cycle_map <- map + geom_point(

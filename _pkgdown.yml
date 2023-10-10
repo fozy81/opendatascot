@@ -4,9 +4,9 @@ template:
 navbar:
  components:
    articles:
-    text: Docs
+    text: Guides
     menu:
-    - text: Basic Examples
+    - text: Basic Guide
       href: articles/basic-usage.html
-    - text: Worked Example
+    - text: Advanced Guide - Bike Hire
       href: articles/riding-a-bike.html
