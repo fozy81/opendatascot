@@ -302,7 +302,7 @@ g
 
 Plotting all the lines at once blocks and covers many lines, so let's animate the trips as they are taken.
 
-```{r, eval=FALSE, echo=TRUE}
+```{r steps, eval=FALSE, echo=TRUE}
 steps <- seq(from = 1000, to = 664586, by = floor(nrow(sf) / 10))
 sf$year <- year(trips$`Start time`)
 names(steps) <- seq_along(length(steps))
@@ -355,7 +355,7 @@ NOTE: This requires having the [Open Source Routing Machine](http://project-osrm
 
 Running this code may take many days!...
 
-```{r, eval=FALSE, echo=TRUE}
+```{r routes, eval=FALSE, echo=TRUE}
 # loop through sf and find a route from osrm...
 steps <- seq(from = 1000, to = 664586, by = floor(nrow(trips) / 500))
 
@@ -382,7 +382,7 @@ purrr::map_df(split(trips, trips$id), function(trip) {
 
 This section requires [ffmpeg](https://ffmpeg.org/) system library to be installed to give fine control to generating gif and mpegs videos. 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r animate, eval=FALSE, echo=TRUE}
 routes <- st_read("trips.geojson")
 trips$day <- day(trips$`Start time`)
 trips$day <- str_pad(trips$day, pad = 0, width = 2)

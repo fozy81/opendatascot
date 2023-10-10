@@ -13,7 +13,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -84,13 +84,13 @@ will be warned if a dataset can't be downloaded.
 To download data, you can either download the metadata using
 `ods_search()`.
 
-```{r}
+```{r bins}
 query <- ods_search("bins")
 ```
 
 Then pass that data frame to `ods_get()`.
 
-```{r, echo=FALSE, message=FALSE}
+```{r query, echo=FALSE, message=FALSE}
 data <- ods_get(query, ask = FALSE)
 ```
 
@@ -101,7 +101,7 @@ data <- ods_get(query)
 ***Or*** use the `search` argument in `ods_get(search="my search term")`
 to search and download any matching datasets in one step.
 
-```{r, echo=FALSE, message=FALSE}
+```{r get, echo=FALSE, message=FALSE}
 data <- ods_get(search = "bins", ask = FALSE)
 ```
 
@@ -122,7 +122,7 @@ data <- ods_get(search = "Number of bikes", refresh = TRUE, ask = FALSE)
 Once you have downloaded the dataset(s), you may wish to plot or map the
 data. Here's a short example of how plotting can be done.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r recycling, echo=FALSE, message=FALSE, warning=FALSE}
 data <- ods_get(search = "Recycling Points", ask = FALSE)
 ```
 
@@ -133,14 +133,14 @@ data <- ods_get(search = "Recycling Point Locations")
 The `ods_get()` function returned a named list of data frames - lets
 select the one we want by name:
 
-```{r}
+```{r aberdeen}
 recycling_points <- data$Recycling_Points_Aberdeen_City_Council
 ```
 
 Or alternatively select the data frame using index/position of
 the name in the list using `[[]]` notation.
 
-```{r}
+```{r data}
 names(data)
 recycling_points <- data[[2]]
 ```
@@ -150,21 +150,21 @@ feature](https://r-spatial.github.io/sf/) 'sf' data. As we can see in
 the example the data frame is classed as "sf" which means spatial /
 geometry attributes are baked in.
 
-```{r}
+```{r class}
 class(recycling_points)
 ```
 
 You can see a `geometry` variable which contains the spatial
 co-ordinates.
 
-```{r}
+```{r head}
 head(recycling_points, 3)
 ```
 
 This allows the `plot()` function to automatically plot
 the coordinates.
 
-```{r}
+```{r plot}
 plot(recycling_points$geometry, col = as.factor(recycling_points$TEXTILE_YN))
 ```
 
@@ -180,7 +180,7 @@ column.
 Let's download the Glasgow cycle counts data which is only available in
 JSON format.
 
-```{r, echo=FALSE, message=FALSE}
+```{r cycling, echo=FALSE, message=FALSE}
 cycle_count <- ods_get(
   search =
     "Glasgow City Council - Daily cycling counts from automatic cycling",
@@ -193,7 +193,7 @@ cycle_count <- ods_get(
 cycle_count <- ods_get(search = "lasgow City Council - Daily cycling counts from automatic cycling counters")
 ```
 
-```{r}
+```{r count}
 cycle_count <- cycle_count[[1]]
 head(cycle_count, 4)
 ```
@@ -203,7 +203,7 @@ tabulated data frame. This data frame can now be plotted as a chart, in
 the following example, let's use the `ggplot2` plotting library to
 create a graph. We'll display counts over time for each location.
 
-```{r, fig.width=5}
+```{r time_series, fig.width=5}
 library(ggplot2)
 library(scales)
 # Convert character to date (to display date time correctly)
@@ -222,7 +222,7 @@ ggplot(cycle_count, aes(x = Date, y = count, colour = location)) +
 This is a bit noisy so lets sum the counts for all locations to see
 total cycle counts.
 
-```{r, message=FALSE, fig.width=5}
+```{r sum, message=FALSE, fig.width=5}
 library(ggplot2)
 library(dplyr)
 library(magrittr)
@@ -242,7 +242,7 @@ ggplot(sum_cycle_count, aes(x = Date, y = `Total Count`)) +
 We can also use the latitude and longitude columns to plot the points on
 a map.
 
-```{r, fig.width=5}
+```{r points, fig.width=5}
 library(sf)
 # Convert data frame into 'sf' geospatial dataframe
 cycle_counts_geo <- st_as_sf(cycle_count, coords = c("longitude", "latitude"))
@@ -260,7 +260,7 @@ c
 Can you guess which points in Glasgow are most popular for cyclists? We
 can add a base layer map to reveal the streets.
 
-```{r, message=FALSE, fig.width=7}
+```{r map, message=FALSE, fig.width=7}
 library(ggmap)
 library(purrr)
 
@@ -297,7 +297,7 @@ cycle_map <- glasgow + geom_point(
 cycle_map
 ```
 
-```{r, echo=FALSE}
+```{r location, echo=FALSE}
 # Find top location for cycle counts
 loc <- cycle_counts_geo_sum %>%
   arrange(desc(`Total Cycle Count`)) %>%
@@ -305,7 +305,7 @@ loc <- cycle_counts_geo_sum %>%
   head(, n = 1)
 ```
 
-```{r, echo=FALSE}
+```{r link, echo=FALSE}
 # Get co-ordinates of top cycle count point
 coord <- cycle_counts_geo_sum %>%
   arrange(desc(`Total Cycle Count`)) %>%
