@@ -168,7 +168,7 @@ names(bbox) <- c("left", "bottom", "right", "top")
 
 # Download background map using bounding box
 map <- suppressMessages(ggmap(get_stamenmap(bbox,
-  zoom = 11,
+  zoom = 10,
   https = TRUE,
   messaging = TRUE
 )))
