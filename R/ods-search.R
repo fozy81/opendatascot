@@ -29,49 +29,50 @@ ods_search <- function(search = "", refresh = FALSE) {
   file_name <- paste0(file_name, ".rds")
   file_path <- file.path(dir, file_name)
   if (!file.exists(file_path) || refresh) {
-    datasets <- fromJSON("https://opendata.scot/datasets.json",
+    dataset <- fromJSON("https://opendata.scot/datasets.json",
       flatten = TRUE
     )
-    datasets <- as_tibble(datasets)
-    saveRDS(datasets, file_path)
+    dataset <- as_tibble(dataset)
+    create_data_dir(dir, ask = FALSE, dataset)
+    saveRDS(dataset, file_path)
   } else {
-    datasets <- readRDS(file_path)
+    dataset <- readRDS(file_path)
     time <- file.mtime(file_path)
     # If cached data greater than week (in mins units) - warn user to refresh
     if ((Sys.time() - time) > 10090) {
       warning(
-        "The cached list of datasets from opendata.scot is more than 1-week-old
-  - use `refresh=TRUE` to get the most recent update"
+        "The cached list of datasets from opendata.scot is more than
+1-week-old - use `refresh=TRUE` to get the most recent update"
       )
     } else {
       message(paste(
-        "The cached list of datasets from opendata.scot was last downloaded on",
-        format(time, "%Y-%m-%d")
+        "Note, the cached list of datasets from opendata.scot was last
+downloaded on", format(time, "%Y-%m-%d")
       ))
     }
   }
-  datasets <- filter(datasets, licence != "No licence")
+  dataset <- filter(dataset, licence != "No licence")
   search_dfr <- map_dfr(search, function(search) {
-    datasets <- datasets[grep(tolower(search), tolower(datasets$title)), ]
+    dataset <- dataset[grep(tolower(search), tolower(datasets$title)), ]
 
-    datasets <- dplyr::mutate(datasets, unique_id = paste(
+    dataset <- dplyr::mutate(dataset, unique_id = paste(
       .data$title,
       .data$organization
     ))
-    datasets$unique_id <- gsub("[^A-Za-z0-9._-]", "_",
-      datasets$unique_id,
+    dataset$unique_id <- gsub("[^A-Za-z0-9._-]", "_",
+      dataset$unique_id,
       perl = TRUE
     )
-    datasets <- dplyr::select(datasets, .data$unique_id, tidyr::everything())
-    datasets <- tibble::tibble(datasets)
-    if (nrow(datasets) == 0) {
+    dataset <- dplyr::select(dataset, .data$unique_id, tidyr::everything())
+    dataset <- tibble::tibble(dataset)
+    if (nrow(dataset) == 0) {
       message(paste0(
         "You searched for: `",
         search,
         "`. No dataset titles contain that search term"
       ))
     }
-    return(datasets)
+    return(dataset)
   })
   search_dfr <- unique(search_dfr)
   search_dfr <- as_tibble(search_dfr)
