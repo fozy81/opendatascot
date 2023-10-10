@@ -300,6 +300,7 @@ cycle_map
 
 
 ```{r location, echo=FALSE}
+library(purrr)
 # Find top location for cycle counts
 loc <- cycle_counts_geo_sum %>%
   arrange(desc(`Total Cycle Count`)) %>%

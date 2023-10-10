@@ -158,7 +158,7 @@ trips <- trips %>%
 
 ### Map
 
-```{r map-stat-point, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
+```{r trips-geo, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE, cache=TRUE}
 # Convert data frame into 'sf' geospatial dataframe
 trips <- st_as_sf(trips, coords = c("START LONG", "START LAT"))
 ```
