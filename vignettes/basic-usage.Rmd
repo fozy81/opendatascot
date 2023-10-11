@@ -297,7 +297,7 @@ cycle_map <- glasgow + geom_point(
 cycle_map
 ```
 
-
+<img alt="Cycle Trips Map" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/cycle-points.png?raw=true" width="400" align="center"/>
 
 ```{r location, echo=FALSE}
 library(purrr)

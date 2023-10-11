@@ -4,7 +4,13 @@
 \alias{ods_get}
 \title{Get Data From Open Data Scotland}
 \usage{
-ods_get(data = NULL, search = NULL, refresh = FALSE, ask = TRUE)
+ods_get(
+  data = NULL,
+  search = NULL,
+  refresh = FALSE,
+  ask = TRUE,
+  type = c("CSV", "GEOJSON", "JSON", "ZIP")
+)
 }
 \arguments{
 \item{data}{Dataframe from \code{ods_search()} or if default (NULL), will download
@@ -19,6 +25,10 @@ update the cache.}
 \item{ask}{If FALSE, user will not be prompted for input to download data.
 This is useful to automate data downloads and cache updated, or speed-up
 the process if downloading many datasets at once.}
+
+\item{type}{Character string to filter which filetype to download. Default if
+more than one datatype available to preference in this order; GEOJSON, CSV,
+JSON.}
 }
 \value{
 list of named data frames. GeoJSON data is converted to simple

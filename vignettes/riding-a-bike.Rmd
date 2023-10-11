@@ -62,7 +62,13 @@ metadata$licence
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
 ```{r download, echo=FALSE, message=FALSE, warning=FALSE}
-trips <- ods_get(metadata, ask = FALSE)
+
+
+trips <- ods_get(metadata,
+  ask = FALSE,
+  refresh = TRUE,
+  type = "JSON"
+)
 # Data is returned as a list of data frames, extract first data frame in the
 # list.
 trips <- trips[[1]]
@@ -113,7 +119,10 @@ Below is a plot of trip start times over 24hrs. Looks as expected: Peaks in morn
 
 ```{r time-of-day, echo = TRUE, warning=FALSE, message=FALSE}
 # Start time of day (hour)
-trips$hour <- hour(trips$`Start time`)
+trips$`Start time` <- strptime(trips$`Start time`, "%Y-%m-%dT%H:%M:%OS")
+
+trips$`Start time` <- lubridate::ymd_hms(trips$`Start time`, truncated = 3)
+trips$hour <- lubridate::hour(trips$`Start time`)
 # ggplot bar chart
 hour_plot <- trips %>%
   ggplot(aes(x = hour)) +
@@ -146,14 +155,32 @@ Here we plot the start location using background map data from [OpenStreetMap](h
 
 ```{r start-points, echo = TRUE, fig.height = 3, warning=FALSE, message=FALSE}
 # Clean out weird points:
+trips$`START LAT` <- as.numeric(trips$`START LAT`)
+trips$`START LONG` <- as.numeric(trips$`START LONG`)
+trips$`END LAT` <- as.numeric(trips$`END LAT`)
+trips$`END LONG` <- as.numeric(trips$`END LONG`)
+
+
 # View the outliers like this: hist(trips$`START LAT`)
 trips <- trips %>%
   filter(!is.na(`START LAT`) &
     !is.na(`START LONG`) &
+    !is.na(`END LAT`) &
+    !is.na(`END LONG`) &
     `START LAT` < 55.9 &
     `START LAT` > 55.8 &
-    `START LONG` < -4.0 &
-    `START LONG` > -4.4)
+    `START LONG` < -4.1 &
+    `START LONG` > -4.4 &
+    `END LAT` < 55.9 &
+    `END LAT` > 55.8 &
+    `END LONG` < -4.1 &
+    `END LONG` > -4.4)
+trips <- mutate(trips,
+  start_long = `START LONG`,
+  start_lat = `START LAT`,
+  finish_long = `END LONG`,
+  finish_lat = `END LAT`
+)
 ```
 
 ### Map
@@ -196,7 +223,7 @@ cycle_map <- map + geom_point(
 cycle_map
 ```
 
-
+<img alt="Cycle Trips Map" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/cycle-map.png?raw=true" width="400" align="center"/>
 
 ## Start and End Trips
 
@@ -209,23 +236,11 @@ and ended in the same place, as we can't tell how far or where they went.
 - Remove trips with same start and end point
   
 ```{r start-end-points, echo=TRUE}
-trips <- ods_get(metadata)
-trips <- trips[[1]]
-trips <- trips %>%
-  filter(!is.na(`START LAT`) &
-    !is.na(`START LONG`) &
-    !is.na(`END LAT`) &
-    !is.na(`END LONG`) &
-    `START LAT` < 55.9 &
-    `START LAT` > 55.8 &
-    `START LONG` < -4.1 &
-    `START LONG` > -4.4 &
-    `END LAT` < 55.9 &
-    `END LAT` > 55.8 &
-    `END LONG` < -4.1 &
-    `END LONG` > -4.4 &
-    `END LONG` != `START LONG` &
-    `END LAT` != `START LAT`)
+trips <- filter(
+  trips,
+  `finish_long` != `start_long` &
+    `finish_long` != `start_long`
+)
 trips <- arrange(trips, `Start time`)
 trips$week <- week(trips$`Start time`)
 trips$month <- month(trips$`Start time`)
@@ -235,12 +250,6 @@ trips$week <- str_pad(trips$week, pad = 0, width = 2)
 trips$year_month <- as.integer(paste0(trips$year, trips$month))
 trips$year_week <- as.integer(paste0(trips$year, trips$week))
 trips <- mutate(trips, arrival_month = seq_len(nrow(trips)))
-trips <- rename(trips,
-  start_long = `START LONG`,
-  start_lat = `START LAT`,
-  finish_long = `END LONG`,
-  finish_lat = `END LAT`
-)
 trips$id <- seq_len(nrow(trips))
 ```
 
@@ -294,8 +303,8 @@ Summarize the average 'as the crow flies' trip distances:
 
 Here we plot all the trips as straight line. 
 
-```{r trip-map, echo=TRUE, cache=TRUE}
-#
+```{r trip-map, echo=TRUE, eval=TRUE}
+
 g <- ggplot() +
   geom_sf(data = sf, mapping = aes(colour = year_month), show.legend = FALSE) +
   lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +

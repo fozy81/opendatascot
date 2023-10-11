@@ -14,7 +14,9 @@
 #' @param ask If FALSE, user will not be prompted for input to download data.
 #'   This is useful to automate data downloads and cache updated, or speed-up
 #'   the process if downloading many datasets at once.
-#'
+#' @param type Character string to filter which filetype to download. Default if
+#'   more than one datatype available to preference in this order; GEOJSON, CSV,
+#'   JSON.
 #' @importFrom rlang .data
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_csv read_file
@@ -35,7 +37,8 @@
 ods_get <- function(data = NULL,
                     search = NULL,
                     refresh = FALSE,
-                    ask = TRUE) {
+                    ask = TRUE,
+                    type = c("CSV", "GEOJSON", "JSON", "ZIP")) {
   data <- validate_data(data, search)
   output <- lapply(split(data, data$unique_id), function(dataset) {
     dir <- opendatascot_dir()
@@ -46,12 +49,11 @@ ods_get <- function(data = NULL,
       title <- dataset$title
       dataset <- select(dataset, .data$title, .data$resources)
       dataset <- unnest(dataset, cols = "resources", names_sep = "_")
-      dataset <- filter(dataset, .data$resources_format %in%
-        c("CSV", "GEOJSON", "JSON", "ZIP"))
+      dataset <- filter(dataset, .data$resources_format %in% type)
       if (nrow(dataset) < 1) {
         warning(
           paste(title,
-            "Is not available in a supported format (CSV, GEOJSON, KML & JSON),
+            "Is not available in a supported format (CSV, GEOJSON & JSON),
           try direct download from openscot.data",
             sep = "\n"
           ),
@@ -62,7 +64,7 @@ ods_get <- function(data = NULL,
       create_data_dir(dir, ask, dataset[1, ])
       if (any(dataset$resources_format %in% "GEOJSON")) {
         dataset <- filter(dataset, .data$resources_format %in%
-          c("GEOJSON", "KML"))
+          c("GEOJSON"))
         url <- dataset$resources_url[1]
         data <- read_file(url)
         data <- st_read(dsn = data, quiet = TRUE)
@@ -77,7 +79,48 @@ ods_get <- function(data = NULL,
         # Workaround for url not returning all results - 'limit(-1)' returns all
         url <- gsub(pattern = "[0-9]/urql", "latest/urql?limit(-1)", url)
         data <- read_file(url)
-        data <- fromJSON(txt = data, flatten = TRUE)
+        json_data <- function(data) {
+          out <- tryCatch(
+            {
+              # Just to highlight: if you want to use more than one
+              # R expression in the "try" part then you'll have to
+              # use curly brackets.
+              # 'tryCatch()' will return the last evaluated expression
+              # in case the "try" part was completed successfully
+              fromJSON(txt = data, flatten = TRUE)
+
+              # The return value of `fromJSON()` is the actual value
+              # that will be returned in case there is no condition
+              # (e.g. warning or error).
+              # You don't need to state the return value via `return()` as code
+              # in the "try" part is not wrapped inside a function (unlike that
+              # for the condition handlers for warnings and error below)
+            },
+            error = function(cond) {
+              message(paste("Adding [] to start and end of
+JSON and hoping it'll work!"))
+              data <- paste0("[", data, "]")
+              fromJSON(txt = data, flatten = TRUE)
+            },
+            warning = function(cond) {
+              message(cond)
+              # Choose a return value in case of warning
+              return(NULL)
+            },
+            finally = {
+              # NOTE:
+              # Here goes everything that should be executed at the end,
+              # regardless of success or error.
+              # If you want more than one expression to be executed, then you
+              # need to wrap them in curly brackets ({...}); otherwise you could
+              # just have written 'finally=<expression>'
+            }
+          )
+
+          return(out)
+        }
+
+        data <- json_data(data)
         data <- as_tibble(data)
       } else {
         dataset <- filter(dataset, .data$resources_format == "ZIP")
