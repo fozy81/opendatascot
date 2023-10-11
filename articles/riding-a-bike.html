@@ -105,7 +105,7 @@ used.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Search and download</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">ods_search</span>(<span class="at">search =</span> <span class="st">"Next Bike Cycle Hire - Glasgow"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> Note, the cached list of datasets from opendata.scot was last</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> downloaded on <span class="dv">2023-10-10</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> downloaded on <span class="dv">2023-10-11</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>licence</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span><span class="er">&gt;</span> [<span class="dv">1</span>] <span class="st">"UK Open Government Licence v3.0"</span></span></code></pre></div>
 </div>
@@ -126,7 +126,7 @@ quick) reference.</p>
 <p>Here we’ll get some summary stats to help us understand the data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">median_duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">Duration</span><span class="op">)</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span>, <span class="st">"mins"</span><span class="op">)</span></span></code></pre></div>
-<p>Median trip duration is around: <code>15 mins</code></p>
+<p>Median trip duration is around: <code>14 mins</code></p>
 <p>Top 3 start locations:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -142,16 +142,16 @@ quick) reference.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="center">Broomielaw - ELECTRIC</td>
-<td align="center">31220</td>
+<td align="center">St Enoch Square - ELECTRIC</td>
+<td align="center">58067</td>
 </tr>
 <tr class="even">
-<td align="center">St Enoch Square - ELECTRIC</td>
-<td align="center">27949</td>
+<td align="center">Broomielaw - ELECTRIC</td>
+<td align="center">56666</td>
 </tr>
 <tr class="odd">
 <td align="center">Glasgow Green</td>
-<td align="center">24474</td>
+<td align="center">50812</td>
 </tr>
 </tbody>
 </table>
@@ -170,16 +170,16 @@ quick) reference.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="center">Broomielaw - ELECTRIC</td>
-<td align="center">29665</td>
+<td align="center">St Enoch Square - ELECTRIC</td>
+<td align="center">57679</td>
 </tr>
 <tr class="even">
-<td align="center">Partick Interchange</td>
-<td align="center">29441</td>
+<td align="center">Broomielaw - ELECTRIC</td>
+<td align="center">55484</td>
 </tr>
 <tr class="odd">
-<td align="center">St Enoch Square - ELECTRIC</td>
-<td align="center">26820</td>
+<td align="center">Partick Interchange</td>
+<td align="center">52881</td>
 </tr>
 </tbody>
 </table>
@@ -191,7 +191,10 @@ Peaks in morning rush hours 7.30-9.30 and evening around 6pm. Quiet at
 4am.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Start time of day (hour)</span></span>
-<span><span class="va">trips</span><span class="op">$</span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span>, <span class="st">"%Y-%m-%dT%H:%M:%OS"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span> <span class="op">&lt;-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span>, truncated <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="co"># ggplot bar chart</span></span>
 <span><span class="va">hour_plot</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hour</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -229,14 +232,32 @@ what explains these but filter to a bounding box around Glasgow
 helps.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Clean out weird points:</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`START LAT`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`START LAT`</span><span class="op">)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`START LONG`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`START LONG`</span><span class="op">)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`END LAT`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`END LAT`</span><span class="op">)</span></span>
+<span><span class="va">trips</span><span class="op">$</span><span class="va">`END LONG`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`END LONG`</span><span class="op">)</span></span>
+<span></span>
+<span></span>
 <span><span class="co"># View the outliers like this: hist(trips$`START LAT`)</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LONG`</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`END LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`END LONG`</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">`START LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.0</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.1</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`END LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`END LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`END LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.1</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`END LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span><span class="op">)</span></span>
+<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">trips</span>,</span>
+<span>  start_long <span class="op">=</span> <span class="va">`START LONG`</span>,</span>
+<span>  start_lat <span class="op">=</span> <span class="va">`START LAT`</span>,</span>
+<span>  finish_long <span class="op">=</span> <span class="va">`END LONG`</span>,</span>
+<span>  finish_lat <span class="op">=</span> <span class="va">`END LAT`</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="map">Map<a class="anchor" aria-label="anchor" href="#map"></a>
 </h4>
@@ -273,6 +294,7 @@ helps.</p>
 <span>    axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cycle_map</span></span></code></pre></div>
+<p><img alt="Cycle Trips Map" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/cycle-map.png?raw=true" width="400" align="center"></p>
 </div>
 </div>
 <div class="section level3">
@@ -288,24 +310,11 @@ or where they went.</p>
 <li>Remove trips with same start and end point</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ods_get.html">ods_get</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'Next Bike Cycle Hire - Glasgow Trip Data (2017-2023)' dataset was last downloaded on 2023-10-10</span></span>
-<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="va">trips</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`START LONG`</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`END LAT`</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">`END LONG`</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.1</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`START LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LAT`</span> <span class="op">&lt;</span> <span class="fl">55.9</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LAT`</span> <span class="op">&gt;</span> <span class="fl">55.8</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LONG`</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">4.1</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LONG`</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">4.4</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LONG`</span> <span class="op">!=</span> <span class="va">`START LONG`</span> <span class="op">&amp;</span></span>
-<span>    <span class="va">`END LAT`</span> <span class="op">!=</span> <span class="va">`START LAT`</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>  <span class="va">trips</span>,</span>
+<span>  <span class="va">`finish_long`</span> <span class="op">!=</span> <span class="va">`start_long`</span> <span class="op">&amp;</span></span>
+<span>    <span class="va">`finish_long`</span> <span class="op">!=</span> <span class="va">`start_long`</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">trips</span>, <span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">week</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">`Start time`</span><span class="op">)</span></span>
@@ -315,12 +324,6 @@ or where they went.</p>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">year_month</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">year</span>, <span class="va">trips</span><span class="op">$</span><span class="va">month</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">year_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">trips</span><span class="op">$</span><span class="va">year</span>, <span class="va">trips</span><span class="op">$</span><span class="va">week</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">trips</span>, arrival_month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">trips</span>,</span>
-<span>  start_long <span class="op">=</span> <span class="va">`START LONG`</span>,</span>
-<span>  start_lat <span class="op">=</span> <span class="va">`START LAT`</span>,</span>
-<span>  finish_long <span class="op">=</span> <span class="va">`END LONG`</span>,</span>
-<span>  finish_lat <span class="op">=</span> <span class="va">`END LAT`</span></span>
-<span><span class="op">)</span></span>
 <span><span class="va">trips</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trips</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -362,9 +365,9 @@ or where they went.</p>
 <span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">4326</span> <span class="co">## Assume it's in Web Mercator</span></span></code></pre></div>
 <p>Summarize the average ‘as the crow flies’ trip distances:</p>
 <ul>
-<li><p><strong>Max distance:</strong> 10719m</p></li>
-<li><p><strong>Min distance:</strong> 0.13m (!)</p></li>
-<li><p><strong>Average distance:</strong> 1959m</p></li>
+<li><p><strong>Max distance:</strong> 13719m</p></li>
+<li><p><strong>Min distance:</strong> 0.02m (!)</p></li>
+<li><p><strong>Average distance:</strong> 1948m</p></li>
 </ul>
 </div>
 </div>
@@ -373,7 +376,7 @@ or where they went.</p>
 </h2>
 <p>Here we plot all the trips as straight line.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
+<code class="sourceCode R"><span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sf</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">year_month</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">lims</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.4</span>, <span class="fl">4.1</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">55.8</span>, <span class="fl">55.9</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
