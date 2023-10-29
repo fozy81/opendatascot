@@ -62,8 +62,6 @@ metadata$licence
 Using the meta-data, we can download the raw cycle trips data directly from the provider and save it to our computer for future (and quick) reference.
 
 ```{r download, echo=FALSE, message=FALSE, warning=FALSE}
-
-
 trips <- ods_get(metadata,
   ask = FALSE,
   refresh = TRUE,
@@ -223,7 +221,7 @@ cycle_map <- map + geom_point(
 cycle_map
 ```
 
-<img alt="Cycle Trips Map" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/cycle-map.png?raw=true" width="400" align="center"/>
+<img alt="Cycle Trips Map" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/cycle-map.png?raw=true" width="500" align="center"/>
 
 ## Start and End Trips
 
@@ -303,7 +301,7 @@ Summarize the average 'as the crow flies' trip distances:
 
 Here we plot all the trips as straight line. 
 
-```{r trip-map, echo=TRUE, eval=TRUE}
+```{r trip-map, echo=FALSE, eval=FALSE}
 
 g <- ggplot() +
   geom_sf(data = sf, mapping = aes(colour = year_month), show.legend = FALSE) +
@@ -311,6 +309,9 @@ g <- ggplot() +
   labs(title = "All Trips")
 g
 ```
+
+<img alt="Trips Animation" src="https://github.com/fozy81/opendatascot/blob/master/vignettes/images/straight-line.png?raw=true" width="500" align="center"/>
+
 
 ## Animation 
 
