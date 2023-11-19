@@ -70,8 +70,18 @@ ods_get <- function(data = NULL,
         data <- st_read(dsn = data, quiet = TRUE)
       } else if (any(dataset$resources_format %in% "CSV")) {
         dataset <- filter(dataset, .data$resources_format == "CSV")
-        url <- dataset$resources_url[1]
-        data <- read_csv(url, show_col_types = FALSE)
+        data <- purrr::map_df(dataset$resources_url, function(x) {
+          url_data <- readr::read_csv(
+            file = x,
+            show_col_types = FALSE,
+          )
+          Sys.sleep(sample(12:22, 1))
+          return(url_data)
+        },
+        .progress = TRUE
+        )
+        # url <- dataset$resources_url[1]
+        # data <- read_csv(url, show_col_types = FALSE)
         data <- as_tibble(data)
       } else if (any(dataset$resources_format %in% "JSON")) {
         dataset <- filter(dataset, .data$resources_format == "JSON")
