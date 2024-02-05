@@ -302,7 +302,6 @@ Summarize the average 'as the crow flies' trip distances:
 Here we plot all the trips as straight line. 
 
 ```{r trip-map, echo=FALSE, eval=FALSE}
-
 g <- ggplot() +
   geom_sf(data = sf, mapping = aes(colour = year_month), show.legend = FALSE) +
   lims(x = c(4.4, 4.1), y = c(55.8, 55.9)) +
